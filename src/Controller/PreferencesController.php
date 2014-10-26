@@ -1,0 +1,122 @@
+<?php
+
+namespace Oxygen\Preferences\Controller;
+
+use Exception;
+
+use View;
+use Input;
+use Lang;
+use Response;
+use Validator;
+use Preferences;
+
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use Oxygen\Core\Blueprint\Manager as BlueprintManager;
+use Oxygen\Core\Controller\BlueprintController;
+use Oxygen\Core\Http\Notification;
+
+class PreferencesController extends BlueprintController {
+
+    /**
+     * Constructs the AuthController.
+     *
+     * @param BlueprintManager $manager
+     */
+
+    public function __construct(BlueprintManager $manager) {
+        parent::__construct($manager, 'Preferences');
+    }
+
+    /**
+     * Lists preferences for that group.
+     *
+     * @param string $key
+     * @return Response
+     */
+
+    public function getView($group = null) {
+        return View::make('oxygen/preferences::list', ['group' => $group]);
+    }
+
+    /**
+     * Form to update a preferences.
+     *
+     * @return Response
+     */
+
+    public function getUpdate($key) {
+        $schema = $this->getSchema($key);
+
+        return View::make('oxygen/preferences::update', ['schema' => $schema]);
+    }
+
+    /**
+     * Updates the preferences
+     *
+     * @return Response
+     */
+
+    public function putUpdate($key) {
+        $schema = $this->getSchema($key);
+
+        $input = $this->preferencesFromInput(Input::except('_method', '_token'));
+        $validator = Validator::make($input, $schema->getValidationRules());
+        if($validator->fails()) {
+            return Response::notification(
+                new Notification($validator->messages()->first(), Notification::FAILED)
+            );
+        }
+
+        $schema->getRepository()->fill($input);
+        $schema->storeRepository();
+
+        return Response::notification(
+            new Notification(Lang::get('oxygen/preferences::messages.updated'))
+        );
+    }
+
+    /**
+     * Gets the schema for the specified key.
+     *
+     * @param string $key
+     * @return Schema
+     */
+
+    protected function getSchema($key) {
+        if(!Preferences::has($key)) {
+            throw new NotFoundHttpException();
+        }
+
+        $schema = Preferences::get($key);
+        $schema->loadRepository();
+        return $schema;
+    }
+
+    /**
+     * Returns an array of preferences keys and values ready for validation.
+     *
+     * @param array $input
+     * @return array
+     */
+
+    protected function preferencesFromInput(array $input) {
+        $return = [];
+
+        foreach($input as $key => $value) {
+            $key = str_replace('_', '.', $key);
+
+            if($value === 'false') {
+                $value = false;
+            } else if($value === 'true') {
+                $value = true;
+            }
+
+            $return[$key] = $value;
+        }
+
+        return $return;
+    }
+
+}
