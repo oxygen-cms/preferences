@@ -2,6 +2,7 @@
 
 namespace Oxygen\Preferences\Transformer;
 
+use Exception;
 use Oxygen\Preferences\Repository;
 
 class JsonTransformer {
@@ -10,9 +11,10 @@ class JsonTransformer {
      * Converts a JSON string into a preferences repository.
      *
      * @param string $json
+     * @throws Exception if the preferences are invalid
      * @return Repository
      */
-
+    
     public function toRepository($json) {
         $array = json_decode($json, true);
         if(!is_array($array)) {
