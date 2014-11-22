@@ -32,12 +32,18 @@ class PreferencesController extends BlueprintController {
     /**
      * Lists preferences for that group.
      *
-     * @param string $key
+     * @param string $group
      * @return Response
      */
 
     public function getView($group = null) {
-        return View::make('oxygen/preferences::list', ['group' => $group]);
+        $title = Preferences::isRoot($group) ? '' : Preferences::group($group) . ' ';
+        $title .= Lang::get('oxygen/preferences::ui.home.title');
+
+        return View::make('oxygen/preferences::list', [
+            'group' => $group,
+            'title' => $title
+        ]);
     }
 
     /**
@@ -49,7 +55,10 @@ class PreferencesController extends BlueprintController {
     public function getUpdate($key) {
         $schema = $this->getSchema($key);
 
-        return View::make('oxygen/preferences::update', ['schema' => $schema]);
+        return View::make('oxygen/preferences::update', [
+            'schema' => $schema,
+            'title' => Lang::get('oxygen/preferences::ui.update.title', ['name' => $schema->getTitle()]) . ' ' . Lang::get('oxygen/preferences::ui.home.title')
+        ]);
     }
 
     /**

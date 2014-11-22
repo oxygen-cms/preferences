@@ -12,7 +12,7 @@
 return [
 
     'home' => [
-        'title'         => 'System Preferences',
+        'title'         => 'Preferences',
         'noItems'       => 'No Preferences'
     ],
 
