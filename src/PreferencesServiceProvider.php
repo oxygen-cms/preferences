@@ -42,7 +42,7 @@ class PreferencesServiceProvider extends ServiceProvider {
 		$blueprint = $this->app['oxygen.blueprintManager']->get('Preferences');
 		$nav = $this->app['oxygen.navigation'];
 
-		$nav->add($blueprint->getToolbarItem('getView'), Navigation::SECONDARY);
+		$nav->add($blueprint->getToolbarItem('getView'));
 	}
 
 	/**
