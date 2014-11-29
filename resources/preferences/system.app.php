@@ -37,6 +37,7 @@ Preferences::register('system.app', function($schema) {
                 ],
                 [
                     'name' => 'fallback_locale',
+                    'label' => 'Fallback Locale',
                     'description' => Lang::get('oxygen/preferences::descriptions.app.fallback_locale')
                 ]
             ],

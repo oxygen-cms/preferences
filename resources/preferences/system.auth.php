@@ -3,7 +3,7 @@
 use Oxygen\Preferences\Loader\ConfigLoader;
 
 Preferences::register('system.auth', function($schema) {
-    $schema->setTitle('Auth');
+    $schema->setTitle('Authentication');
     $schema->setLoader(new ConfigLoader(App::make('config'), 'auth'));
 
     $schema->makeFields([
@@ -15,7 +15,8 @@ Preferences::register('system.auth', function($schema) {
                     'description' => Lang::get('oxygen/preferences::descriptions.auth.driver'),
                     'options' => [
                         'database' => 'Database',
-                        'eloquent' => 'Eloquent'
+                        'eloquent' => 'Eloquent',
+                        'doctrine' => 'Doctrine'
                     ]
                 ],
                 [

@@ -34,6 +34,7 @@ Preferences::register('system.database', function($schema) {
             'Redis' => [
                 [
                     'name' => 'redis.cluster',
+                    'label' => 'Cluster',
                     'type' => 'toggle'
                 ]
             ]
