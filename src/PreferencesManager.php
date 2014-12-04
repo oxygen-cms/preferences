@@ -16,6 +16,14 @@ class PreferencesManager {
     protected $schemas;
 
     /**
+     * Lazy-loaded schemas of the PreferencesManager
+     *
+     * @var array
+     */
+
+    protected $lazySchemas;
+
+    /**
      * Groups of the PreferencesManager
      *
      * @var array
@@ -24,13 +32,12 @@ class PreferencesManager {
     protected $groups;
 
     /**
-     * Constructs the PreferencesManager
-     *
-     * @return void
+     * Constructs the PreferencesManager.
      */
 
     public function __construct() {
         $this->schemas = [];
+        $this->lazySchemas = [];
         $this->groups  = [];
     }
 
@@ -78,9 +85,18 @@ class PreferencesManager {
      */
 
     public function register($key, callable $callback) {
-        $schema = new Schema($key);
-        $callback($schema);
-        $this->add($schema);
+        $this->addLazy($key, $callback);
+    }
+
+    /**
+     * Adds a lazy loaded preferences schema.
+     *
+     * @param string $key
+     * @param callable $callback
+     */
+
+    protected function addLazy($key, callable $callback) {
+        $this->lazySchemas[$key] = $callback;
     }
 
     /**
@@ -106,11 +122,43 @@ class PreferencesManager {
      */
 
     public function get($key) {
+        $this->load($key);
+
         $schema = array_get($this->schemas, $key, null);
         if($schema === null) {
             throw new InvalidArgumentException('Key "' . $key . '" not found.');
         }
         return $schema;
+    }
+
+    /**
+     * Loads the callback of the given schema.
+     *
+     * @param string $key
+     * @return boolean
+     */
+
+    public function load($key) {
+        if($this->isRoot($key)) {
+            $schemas = $this->lazySchemas;
+        } else {
+            $schemas = array_where($this->lazySchemas, function($possibleKey) use($key) {
+                return starts_with($possibleKey, $key);
+            });
+        }
+
+        if(empty($schemas)) {
+            return false;
+        }
+
+        foreach($schemas as $key => $callback) {
+            unset($this->lazySchemas[$key]);
+            $schema = new Schema($key);
+            $callback($schema);
+            $this->add($schema);
+        }
+
+        return true;
     }
 
     /**
@@ -132,6 +180,8 @@ class PreferencesManager {
      */
 
     public function has($key) {
+        $this->load($key);
+
         return array_get($this->schemas, $key, null) !== null;
     }
 
@@ -142,6 +192,8 @@ class PreferencesManager {
      */
 
     public function all() {
+        $this->load('');
+
         return $this->schemas;
     }
 
