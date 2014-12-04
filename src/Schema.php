@@ -93,11 +93,25 @@ class Schema {
     /**
      * Loads the Preferences repository.
      *
+     * @param LoaderInterface|callable $loader
      * @return void
      */
 
-    public function setLoader(LoaderInterface $loader) {
+    public function setLoader($loader) {
         $this->loader = $loader;
+    }
+
+    /**
+     * Resolves the loader.
+     *
+     * @return void
+     */
+
+    protected function resolveLoader() {
+        if(is_callable($this->loader)) {
+            $callable = $this->loader;
+            $this->loader = $callable();
+        }
     }
 
     /**
@@ -107,6 +121,8 @@ class Schema {
      */
 
     public function loadRepository() {
+        $this->resolveLoader();
+
         $this->repository = $this->loader->load();
     }
 
@@ -117,13 +133,15 @@ class Schema {
      */
 
     public function storeRepository() {
+        $this->resolveLoader();
+
         $this->loader->store($this->repository, $this);
     }
 
     /**
      * Returns the Preferences repository.
      *
-     * @return void
+     * @return Repository
      */
 
     public function getRepository() {
@@ -206,7 +224,7 @@ class Schema {
      */
 
     public function getValidationRules() {
-        $rules = array();
+        $rules = [];
 
         foreach(array_dot($this->fields) as $field) {
             $rules[$field->name] = $field->validationRules;
