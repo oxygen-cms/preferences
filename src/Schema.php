@@ -48,6 +48,14 @@ class Schema {
     protected $repository;
 
     /**
+     * A custom view file to be displayed.
+     *
+     * @var string
+     */
+
+    protected $view;
+
+    /**
      * Constructs the Schema
      *
      * @param string $key
@@ -166,7 +174,7 @@ class Schema {
         if(!isset($this->fields[$group][$subgroup])) {
             $this->fields[$group][$subgroup] = [];
         }
-        $this->fields[$group][$subgroup][] = $field;
+        $this->fields[$group][$subgroup][$field->name] = $field;
     }
 
     /**
@@ -208,6 +216,17 @@ class Schema {
     }
 
     /**
+     * Returns a field by its name.
+     *
+     * @param string $name
+     * @return Field
+     */
+
+    public function getField($name, $group = '', $subgroup = '') {
+        return $this->fields[$group][$subgroup][$name];
+    }
+
+    /**
      * Returns all fields.
      *
      * @return array
@@ -215,6 +234,37 @@ class Schema {
 
     public function getFields() {
         return $this->fields;
+    }
+
+    /**
+     * Sets the view.
+     *
+     * @param string $view
+     * @return void
+     */
+
+    public function setView($view) {
+        $this->view = $view;
+    }
+
+    /**
+     * Determines if the view has been set.
+     *
+     * @return boolean
+     */
+
+    public function hasView() {
+        return $this->view !== null;
+    }
+
+    /**
+     * Returns the view.
+     *
+     * @return string
+     */
+
+    public function getView() {
+        return $this->view;
     }
 
     /**

@@ -55,7 +55,9 @@ class PreferencesController extends BlueprintController {
     public function getUpdate($key) {
         $schema = $this->getSchema($key);
 
-        return View::make('oxygen/preferences::update', [
+        $view = $schema->hasView() ? $schema->getView() : 'oxygen/preferences::update';
+
+        return View::make($view, [
             'schema' => $schema,
             'title' => Lang::get('oxygen/preferences::ui.update.title', ['name' => $schema->getTitle()]) . ' ' . Lang::get('oxygen/preferences::ui.home.title')
         ]);
@@ -82,7 +84,8 @@ class PreferencesController extends BlueprintController {
         $schema->storeRepository();
 
         return Response::notification(
-            new Notification(Lang::get('oxygen/preferences::messages.updated'))
+            new Notification(Lang::get('oxygen/preferences::messages.updated')),
+            ['refresh' => true]
         );
     }
 
