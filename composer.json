@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "oxygen/core": "dev-master",
+        "oxygen/core": "~0.1.0",
         "illuminate/support": "4.2.*"
     },
     "autoload": {
@@ -23,7 +23,6 @@
             "Oxygen\\Preferences\\": "src/"
         }
     },
-    "minimum-stability": "stable",
     "extra": {
         "title": "Oxygen Preferences",
         "readme": "oxygen.md",
