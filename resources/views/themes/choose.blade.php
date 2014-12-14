@@ -33,12 +33,18 @@
         'class' => 'Form--sendAjax Form--warnBeforeExit Form--submitOnKeydown Form--themes'
     ]);
 
-    $titles = [];
+    $themes = Theme::all();
 ?>
+
+@if(empty($themes))
+    <div class="Block">
+        <h3 class="heading-gamma margin-large">@lang('oxygen/preferences::ui.theme.choose.empty')</h3>
+    </div>
+@endif
 
 <div class="Row--layout Row--equalCells">
     <?php
-        foreach(Theme::all() as $theme):
+        foreach($themes as $theme):
             $itemHeader = new Header($theme->getName(), ['span' => 'oneThird'], Header::TYPE_BLOCK);
             $itemHeader->addClass('Link-cursor');
             if($theme == Theme::current()) {

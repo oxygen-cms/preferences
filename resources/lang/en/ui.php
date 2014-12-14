@@ -20,6 +20,12 @@ return [
         'title'         => ':name',
         'close'         => 'Close',
         'submit'        => 'Save'
+    ],
+
+    'theme' => [
+        'choose' => [
+            'empty' => 'No Themes'
+        ]
     ]
 
 ];
