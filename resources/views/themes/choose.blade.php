@@ -4,7 +4,7 @@
 
 <?php
 
-    use Oxygen\Core\Html\Header\Header;
+use Oxygen\Core\Html\Form\Label;use Oxygen\Core\Html\Form\Row;use Oxygen\Core\Html\Header\Header;
     use Oxygen\Core\Html\Form\Footer;
     use Oxygen\Core\Html\Form\EditableField;
 
@@ -64,8 +64,12 @@
 <div class="Block js-hide">
     <?php
         $field = $schema->getField('theme');
-        $editableField = new EditableField($field, Theme::getCurrentKey());
-        echo $editableField->render();
+        if($field->editable) {
+            $editableField = new EditableField($field, Theme::getCurrentKey());
+            $label = new Label($field->getMeta());
+            $row = new Row([$label, $editableField]);
+            echo $row->render();
+        }
     ?>
 </div>
 

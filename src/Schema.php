@@ -2,7 +2,7 @@
 
 namespace Oxygen\Preferences;
 
-use Oxygen\Core\Form\Field;
+use Oxygen\Core\Form\FieldMetadata;
 use Oxygen\Preferences\Loader\LoaderInterface;
 
 class Schema {
@@ -163,11 +163,11 @@ class Schema {
     /**
      * Add a field.
      *
-     * @param Field $field
+     * @param FieldMetadata $field
      * @return void
      */
 
-    public function addField(Field $field, $group = '', $subgroup = '') {
+    public function addField(FieldMetadata $field, $group = '', $subgroup = '') {
         if(!isset($this->fields[$group])) {
             $this->fields[$group] = [];
         }
@@ -187,7 +187,7 @@ class Schema {
      */
 
     public function makeField(array $parameters, $group = '', $subgroup = '') {
-        $field = new Field($parameters['name'], Field::TYPE_TEXT, true);
+        $field = new FieldMetadata($parameters['name'], FieldMetadata::TYPE_TEXT, true);
         unset($parameters['name']);
         foreach($parameters as $key => $value) {
             $field->$key = $value;
@@ -219,7 +219,7 @@ class Schema {
      * Returns a field by its name.
      *
      * @param string $name
-     * @return Field
+     * @return FieldMetadata
      */
 
     public function getField($name, $group = '', $subgroup = '') {
