@@ -187,7 +187,7 @@ class Schema {
      */
 
     public function makeField(array $parameters, $group = '', $subgroup = '') {
-        $field = new FieldMetadata($parameters['name'], FieldMetadata::TYPE_TEXT, true);
+        $field = new FieldMetadata($parameters['name'], 'text', true);
         unset($parameters['name']);
         foreach($parameters as $key => $value) {
             $field->$key = $value;
