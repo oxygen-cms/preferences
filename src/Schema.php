@@ -56,6 +56,14 @@ class Schema {
     protected $view;
 
     /**
+     * Validation rules for the fields
+     *
+     * @var array
+     */
+
+    protected $validationRules;
+
+    /**
      * Constructs the Schema
      *
      * @param string $key
@@ -65,6 +73,7 @@ class Schema {
         $this->key      = $key;
         $this->title    = $key;
         $this->fields   = [];
+        $this->validationRules = [];
     }
 
     /**
@@ -190,6 +199,13 @@ class Schema {
         $field = new FieldMetadata($parameters['name'], 'text', true);
         unset($parameters['name']);
         foreach($parameters as $key => $value) {
+            if($key == 'validationRules') {
+                if(is_string($value)) {
+                    $value = explode('|', $value);
+                }
+                $this->validationRules[$field->name] = $value;
+                continue;
+            }
             $field->$key = $value;
         }
         $this->addField($field, $group, $subgroup);
@@ -274,16 +290,7 @@ class Schema {
      */
 
     public function getValidationRules() {
-        $rules = [];
-
-        foreach(array_dot($this->fields) as $field) {
-            $rules[$field->name] = $field->validationRules;
-            if(is_string($rules[$field->name])) {
-                $rules[$field->name] = implode('|', $rules);
-            }
-        }
-
-        return $rules;
+        return $this->validationRules;
     }
 
 }

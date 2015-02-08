@@ -4,6 +4,7 @@ namespace Oxygen\Preferences\Controller;
 
 use Exception;
 
+use Oxygen\Preferences\Schema;
 use View;
 use Input;
 use Lang;
@@ -85,7 +86,7 @@ class PreferencesController extends BlueprintController {
 
         return Response::notification(
             new Notification(Lang::get('oxygen/preferences::messages.updated')),
-            ['refresh' => true]
+            ['refresh' => true, 'hardRedirect' => true]
         );
     }
 

@@ -1,7 +1,7 @@
 <?php
 
     use Oxygen\Core\Html\Form\EditableField;
-    use Oxygen\Core\Html\Form\Footer;use Oxygen\Core\Html\Form\Label;use Oxygen\Core\Html\Form\Row;
+    use Oxygen\Core\Html\Form\Footer;use Oxygen\Core\Html\Form\Label;use Oxygen\Core\Html\Form\Row;use Oxygen\Core\Html\Toolbar\ButtonToolbarItem;use Oxygen\Core\Html\Toolbar\SubmitToolbarItem;
 
 echo Form::open([
         'route' => [$blueprint->getRouteName('putUpdate'), $schema->getKey()],
@@ -31,7 +31,7 @@ echo Form::open([
                         continue;
                     }
                     $editable = new EditableField($field, $schema->getRepository()->get($field->name));
-                    $label = new Label($field->getMeta());
+                    $label = new Label($field);
                     $row = new Row([$label, $editable]);
                     echo $row->render();
                  endforeach;
@@ -43,16 +43,11 @@ echo Form::open([
 <div class="Block">
     <?php
         if(!isset($footer)) {
-            $footer = new Footer([
-                [
-                    'route' => $blueprint->getRouteName('getView'),
-                    'label' => Lang::get('oxygen/preferences::ui.update.close')
-                ],
-                [
-                    'type' => 'submit',
-                    'label' => Lang::get('oxygen/preferences::ui.update.submit')
-                ]
+            $footer = new Row([
+                new ButtonToolbarItem(Lang::get('oxygen/preferences::ui.update.close'), $blueprint->getAction('getView')),
+                new SubmitToolbarItem(Lang::get('oxygen/preferences::ui.update.submit'))
             ]);
+            $footer->isFooter = true;
         }
         echo $footer->render();
     ?>

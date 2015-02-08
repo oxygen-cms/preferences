@@ -6,9 +6,9 @@
 
 use Oxygen\Core\Html\Form\Label;use Oxygen\Core\Html\Form\Row;use Oxygen\Core\Html\Header\Header;
     use Oxygen\Core\Html\Form\Footer;
-    use Oxygen\Core\Html\Form\EditableField;
+    use Oxygen\Core\Html\Form\EditableField;use Oxygen\Core\Html\Toolbar\ButtonToolbarItem;use Oxygen\Core\Html\Toolbar\SubmitToolbarItem;
 
-    $header = Header::fromBlueprint(
+$header = Header::fromBlueprint(
         $blueprint,
         Lang::get('oxygen/preferences::ui.update.title', ['name' => $schema->getTitle()])
     );
@@ -76,16 +76,11 @@ use Oxygen\Core\Html\Form\Label;use Oxygen\Core\Html\Form\Row;use Oxygen\Core\Ht
 <div class="Block js-hide">
     <?php
         if(!isset($footer)) {
-            $footer = new Footer([
-                [
-                    'route' => $blueprint->getRouteName('getView'),
-                    'label' => Lang::get('oxygen/preferences::ui.update.close')
-                ],
-                [
-                    'type' => 'submit',
-                    'label' => Lang::get('oxygen/preferences::ui.update.submit')
-                ]
+            $footer = new Row([
+                new ButtonToolbarItem(Lang::get('oxygen/preferences::ui.update.close'), $blueprint->getRouteName('getView')),
+                new SubmitToolbarItem(Lang::get('oxygen/preferences::ui.update.submit'))
             ]);
+            $footer->isFooter = true;
         }
         echo $footer->render();
     ?>
