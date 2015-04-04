@@ -16,6 +16,7 @@ class JsonTransformer {
      */
     
     public function toRepository($json) {
+        $json = $json == '' ? '{}' : $json;
         $array = json_decode($json, true);
         if(!is_array($array)) {
             throw new Exception("Invalid Preferences");
