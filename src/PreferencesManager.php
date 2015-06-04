@@ -34,7 +34,6 @@ class PreferencesManager {
     /**
      * Constructs the PreferencesManager.
      */
-
     public function __construct() {
         $this->schemas = [];
         $this->lazySchemas = [];
@@ -48,7 +47,6 @@ class PreferencesManager {
      * @param array $order
      * @return void
      */
-
     public function loadDirectory($directory, array $order = []) {
         if(!empty($order)) {
             $this->loadOrderedDirectory($directory, $order);
@@ -83,7 +81,6 @@ class PreferencesManager {
      * @param callable $callback
      * @return void
      */
-
     public function register($key, callable $callback) {
         $this->addLazy($key, $callback);
     }
@@ -106,7 +103,6 @@ class PreferencesManager {
      * @param callable $callback
      * @return Schema
      */
-
     public function edit($key, callable $callback) {
         $schema = $this->get($key);
         $callback($schema);
@@ -120,7 +116,6 @@ class PreferencesManager {
      * @return Schema
      * @throws InvalidArgumentException If the key can't be found.
      */
-
     public function get($key) {
         $this->load($key);
 
@@ -137,7 +132,6 @@ class PreferencesManager {
      * @param string $key
      * @return boolean
      */
-
     public function load($key) {
         if($this->isRoot($key)) {
             $schemas = $this->lazySchemas;
@@ -167,7 +161,6 @@ class PreferencesManager {
      * @param Schema $schema
      * @return Schema
      */
-
     public function add(Schema $schema) {
         array_set($this->schemas, $schema->getKey(), $schema);
     }
@@ -178,7 +171,6 @@ class PreferencesManager {
      * @param string $key
      * @return boolean
      */
-
     public function has($key) {
         $this->load($key);
 
@@ -190,7 +182,6 @@ class PreferencesManager {
      *
      * @return array
      */
-
     public function all() {
         $this->load('');
 
@@ -204,7 +195,6 @@ class PreferencesManager {
      * @param string $name
      * @return void
      */
-
     public function addGroup($key, $name) {
         $this->groups[$key] = $name;
     }
@@ -215,7 +205,6 @@ class PreferencesManager {
      * @param string $key
      * @return string
      */
-
     public function group($key) {
         return isset($this->groups[$key]) ? $this->groups[$key] : $key;
     }
@@ -226,7 +215,6 @@ class PreferencesManager {
      * @param string $key
      * @return boolean
      */
-
     public function isRoot($key) {
         return $key === '' || $key === null;
     }
@@ -237,7 +225,6 @@ class PreferencesManager {
      * @param string $key
      * @return string
      */
-
     public function parentGroup($key) {
         $parts = explode('.', $key);
         array_pop($parts);

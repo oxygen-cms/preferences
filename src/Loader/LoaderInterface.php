@@ -12,7 +12,6 @@ interface LoaderInterface {
      *
      * @return Repository
      */
-
     public function load();
 
     /**
@@ -21,7 +20,6 @@ interface LoaderInterface {
      * @param Repository $repository
      * @return void
      */
-
     public function store(Repository $repository, Schema $schema);
 
 }

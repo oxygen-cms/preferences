@@ -14,7 +14,6 @@ class JavascriptTransformer extends JsonTransformer {
      * @param string $json
      * @return Repository
      */
-
     public function toRepository($json) {
         throw new Exception("Cannot convert Javascript object to Preferences Repository");
     }
@@ -27,7 +26,6 @@ class JavascriptTransformer extends JsonTransformer {
      * @param boolean    $pretty
      * @return string
      */
-
     public function fromRepository(Repository $repository, $variableName = 'preferences', $pretty = false) {
         return '<script>' . 'var ' . $variableName . ' = ' . parent::fromRepository($repository) . ';</script>';
     }

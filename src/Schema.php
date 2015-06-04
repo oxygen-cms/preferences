@@ -68,7 +68,6 @@ class Schema {
      *
      * @param string $key
      */
-
     public function __construct($key) {
         $this->key      = $key;
         $this->title    = $key;
@@ -81,7 +80,6 @@ class Schema {
      *
      * @return string
      */
-
     public function getKey() {
         return $this->key;
     }
@@ -91,7 +89,6 @@ class Schema {
      *
      * @return string
      */
-
     public function getTitle() {
         return $this->title;
     }
@@ -102,7 +99,6 @@ class Schema {
      * @param string $title
      * @return void
      */
-
     public function setTitle($title) {
         $this->title = $title;
     }
@@ -113,7 +109,6 @@ class Schema {
      * @param LoaderInterface|callable $loader
      * @return void
      */
-
     public function setLoader($loader) {
         $this->loader = $loader;
     }
@@ -136,7 +131,6 @@ class Schema {
      *
      * @return void
      */
-
     public function loadRepository() {
         $this->resolveLoader();
 
@@ -148,7 +142,6 @@ class Schema {
      *
      * @return void
      */
-
     public function storeRepository() {
         $this->resolveLoader();
 
@@ -160,7 +153,6 @@ class Schema {
      *
      * @return Repository
      */
-
     public function getRepository() {
         if($this->repository === null) {
             $this->loadRepository();
@@ -175,7 +167,6 @@ class Schema {
      * @param FieldMetadata $field
      * @return void
      */
-
     public function addField(FieldMetadata $field, $group = '', $subgroup = '') {
         if(!isset($this->fields[$group])) {
             $this->fields[$group] = [];
@@ -194,7 +185,6 @@ class Schema {
      * @param string $subgroup
      * @return void
      */
-
     public function makeField(array $parameters, $group = '', $subgroup = '') {
         $field = new FieldMetadata($parameters['name'], 'text', true);
         unset($parameters['name']);
@@ -217,7 +207,6 @@ class Schema {
      * @param array $fields
      * @return void
      */
-
     public function makeFields(array $fields) {
         foreach($fields as $groupName => $groupItems) {
             foreach($groupItems as $subgroupName => $subgroupItems) {
@@ -237,7 +226,6 @@ class Schema {
      * @param string $name
      * @return FieldMetadata
      */
-
     public function getField($name, $group = '', $subgroup = '') {
         return $this->fields[$group][$subgroup][$name];
     }
@@ -247,7 +235,6 @@ class Schema {
      *
      * @return array
      */
-
     public function getFields() {
         return $this->fields;
     }
@@ -258,7 +245,6 @@ class Schema {
      * @param string $view
      * @return void
      */
-
     public function setView($view) {
         $this->view = $view;
     }
@@ -268,7 +254,6 @@ class Schema {
      *
      * @return boolean
      */
-
     public function hasView() {
         return $this->view !== null;
     }
@@ -278,7 +263,6 @@ class Schema {
      *
      * @return string
      */
-
     public function getView() {
         return $this->view;
     }
@@ -288,7 +272,6 @@ class Schema {
      *
      * @return array
      */
-
     public function getValidationRules() {
         return $this->validationRules;
     }

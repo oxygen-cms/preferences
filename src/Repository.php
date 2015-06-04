@@ -25,7 +25,6 @@ class Repository {
      *
      * @param array $preferences
      */
-
     public function __construct(array $preferences) {
         $this->preferences = $preferences;
         $this->changed = [];
@@ -36,7 +35,6 @@ class Repository {
      *
      * @param Repository $repository
      */
-
     public function addFallbackRepository($repository) {
         $this->preferences = $this->toArray() + $repository->toArray();
     }
@@ -48,7 +46,6 @@ class Repository {
      * @param mixed $default default value
      * @return mixed
      */
-
     public function get($key, $default = '') {
         return array_get($this->preferences, $key, $default);
     }
@@ -60,7 +57,6 @@ class Repository {
      * @param mixed $value new value
      * @return void
      */
-
     public function set($key, $value) {
         $old = array_get($this->preferences, $key, null);
         if($old !== $value) {
@@ -76,7 +72,6 @@ class Repository {
      * @param string $key key using dot notation
      * @return boolean
      */
-
     public function hasChanged($key) {
         return isset($this->changed[$key]) ? $this->changed[$key] : false;
     }
@@ -86,7 +81,6 @@ class Repository {
      *
      * @return array
      */
-
     public function toArray() {
         return $this->preferences;
     }
@@ -97,7 +91,6 @@ class Repository {
      * @param LoaderInterface $loader
      * @return void
      */
-
     public function setLoader(LoaderInterface $loader) {
         $this->loader = $loader;
     }
@@ -108,7 +101,6 @@ class Repository {
      * @param array $input
      * @return void
      */
-
     public function fill(array $input) {
         foreach($input as $key => $value) {
             $this->set($key, $value);

@@ -29,7 +29,6 @@ class ConfigLoader implements LoaderInterface {
      *
      * @param Repository $config
      */
-
     public function __construct(Config $config, $key) {
         $this->config = $config;
         $this->key = $key;
@@ -40,7 +39,6 @@ class ConfigLoader implements LoaderInterface {
      *
      * @return Repository
      */
-
     public function load() {
         return new Repository($this->config->get($this->key));
     }
@@ -52,7 +50,6 @@ class ConfigLoader implements LoaderInterface {
      * @param Schema $schema
      * @return void
      */
-
     public function store(Repository $repository, Schema $schema) {
         foreach(array_flatten($schema->getFields()) as $field) {
             if($repository->hasChanged($field->name)) {

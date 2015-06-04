@@ -25,7 +25,6 @@ class PreferencesController extends BlueprintController {
      *
      * @param BlueprintManager $manager
      */
-
     public function __construct(BlueprintManager $manager) {
         parent::__construct($manager, 'Preferences');
     }
@@ -36,7 +35,6 @@ class PreferencesController extends BlueprintController {
      * @param string $group
      * @return Response
      */
-
     public function getView($group = null) {
         $title = Preferences::isRoot($group) ? '' : Preferences::group($group) . ' ';
         $title .= Lang::get('oxygen/preferences::ui.home.title');
@@ -52,7 +50,6 @@ class PreferencesController extends BlueprintController {
      *
      * @return Response
      */
-
     public function getUpdate($key) {
         $schema = $this->getSchema($key);
 
@@ -69,7 +66,6 @@ class PreferencesController extends BlueprintController {
      *
      * @return Response
      */
-
     public function putUpdate($key) {
         $schema = $this->getSchema($key);
 

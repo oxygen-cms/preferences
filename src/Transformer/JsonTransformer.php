@@ -32,7 +32,6 @@ class JsonTransformer {
      * @param boolean $pretty
      * @return string
      */
-
     public function fromRepository(Repository $repository, $pretty = false) {
         return json_encode($repository->toArray(), $pretty ? JSON_PRETTY_PRINT : 0);
     }
