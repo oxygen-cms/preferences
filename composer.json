@@ -32,7 +32,7 @@
             {
                 "name": "Preferences",
                 "class": "Oxygen\\Preferences\\PreferencesServiceProvider",
-                "description": "Adds the Preferences Interface"
+                "description": "Adds the Preferences Framework"
             }
         ]
     }
