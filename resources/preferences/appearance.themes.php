@@ -1,9 +1,9 @@
 <?php
 
 use Oxygen\Preferences\Loader\ConfigLoader;
-    use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
-    use Oxygen\Preferences\Loader\DatabaseLoader;
-    use Oxygen\Preferences\Loader\ThemeLoader;
+use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
+use Oxygen\Preferences\Loader\DatabaseLoader;
+use Oxygen\Preferences\Loader\ThemeLoader;
 
 Preferences::register('appearance.themes', function($schema) {
     $schema->setTitle('Themes');

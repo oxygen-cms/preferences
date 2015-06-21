@@ -36,9 +36,9 @@ class PreferencesServiceProvider extends BaseServiceProvider {
 	 */
 
 	public function register() {
-        $this->app->bind(PreferenceRepositoryInterface::class, DoctrinePreferenceRepository::class);
-        
         $this->app->bind(ThemeLoader::class, PreferencesThemeLoader::class);
+
+        $this->app->bind(PreferenceRepositoryInterface::class, DoctrinePreferenceRepository::class);
 
 	    $this->app->singleton(PreferencesManager::class, function() {
 	        return new PreferencesManager();
