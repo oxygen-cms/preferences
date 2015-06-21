@@ -1,6 +1,8 @@
 <?php
 
 namespace Oxygen\Preferences\Loader\Database;
+
+use Doctrine\ORM\Mapping AS ORM;
 use Oxygen\Data\Behaviour\PrimaryKey;
 use Oxygen\Data\Behaviour\Accessors;
 use Oxygen\Data\Validation\Validatable;
