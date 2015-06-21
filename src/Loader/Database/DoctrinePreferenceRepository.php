@@ -16,14 +16,16 @@ class DoctrinePreferenceRepository extends Repository implements PreferenceRepos
      * @throws \Oxygen\Data\Exception\NoResultException if the key doesn't exist
      */
     public function findByKey($key) {
+        $qb = $this->getQuery(
+            $this->createSelectQuery()
+                 ->andWhere('o.key = :key')
+                 ->setParameter('key', $key)
+        );
+
         try {
-            return $this->getQuery(
-                $this->createSelectQuery()
-                     ->andWhere('o.key = :key')
-                     ->setParameter('key', $key)
-            )->getSingleResult();
+            return $qb->getSingleResult();
         } catch(Exception $e) {
-            throw new NoResultException($e);
+            throw new NoResultException($e, $this->replaceQueryParameters($qb->getDQL(), $qb->getParameters()));
         }
     }
 }
