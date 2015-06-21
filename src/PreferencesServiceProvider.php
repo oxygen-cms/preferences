@@ -1,13 +1,13 @@
 <?php
 
-namespace OxygenModule\Preferences;
+namespace Oxygen\Preferences;
 
-use Illuminate\Support\ServiceProvider;
+use Oxygen\Data\BaseServiceProvider;
+use Oxygen\Preferences\Loader\Database\DoctrinePreferenceRepository;
+use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
+use Oxygen\Theme\ThemeLoader;
 
-use Oxygen\Core\Html\Navigation\Navigation;
-use Oxygen\Preferences\Loader\ConfigLoader;
-
-class PreferencesServiceProvider extends ServiceProvider {
+class PreferencesServiceProvider extends BaseServiceProvider {
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -24,7 +24,9 @@ class PreferencesServiceProvider extends ServiceProvider {
 	 */
 
 	public function boot() {
-        $this->app['oxygen.preferences']->loadDirectory(__DIR__ . '/../resources/preferences');
+        $this->app[PreferencesManager::class]->loadDirectory(__DIR__ . '/../resources/preferences');
+        $this->loadEntitiesFrom(__DIR__ . '/Loader/Database');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'oxygen/preferences');
 	}
 
 	/**
@@ -34,6 +36,10 @@ class PreferencesServiceProvider extends ServiceProvider {
 	 */
 
 	public function register() {
+        $this->app->bind(PreferenceRepositoryInterface::class, DoctrinePreferenceRepository::class);
+        
+        $this->app->bind(ThemeLoader::class, PreferencesThemeLoader::class);
+
 	    $this->app->singleton(PreferencesManager::class, function() {
 	        return new PreferencesManager();
 	    });

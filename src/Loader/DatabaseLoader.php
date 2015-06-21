@@ -2,35 +2,33 @@
 
 namespace Oxygen\Preferences\Loader;
 
-use Illuminate\Config\Repository as Config;
+use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
 use Oxygen\Preferences\Repository;
 use Oxygen\Preferences\Schema;
 
-class ConfigLoader implements LoaderInterface {
+class DatabaseLoader implements LoaderInterface {
 
     /**
      * Config repository to use.
      *
      * @var Repository
      */
-
-    protected $config;
+    protected $repository;
 
     /**
      * Key
      *
      * @var string
      */
-
     protected $key;
 
     /**
      * Constructs the ConfigLoader.
      *
-     * @param Repository $config
+     * @param PreferenceRepositoryInterface $repository
      */
-    public function __construct(Config $config, $key) {
-        $this->config = $config;
+    public function __construct(PreferenceRepositoryInterface $repository, $key) {
+        $this->repository = $repository;
         $this->key = $key;
     }
 
@@ -40,7 +38,7 @@ class ConfigLoader implements LoaderInterface {
      * @return Repository
      */
     public function load() {
-        return new Repository($this->config->get($this->key));
+        return $this->repository->findByKey($this->key)->getPreferences();
     }
 
     /**
@@ -51,12 +49,9 @@ class ConfigLoader implements LoaderInterface {
      * @return void
      */
     public function store(Repository $repository, Schema $schema) {
-        foreach(array_flatten($schema->getFields()) as $field) {
-            if($repository->hasChanged($field->name)) {
-                $this->config->write($this->key . '.' . $field->name, $repository->get($field->name));
-            } else {
-            }
-        }
+        $item = $this->repository->findByKey($this->key);
+        $item->setPreferences($repository);
+        $this->repository->persist($item);
     }
 
 }

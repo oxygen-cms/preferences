@@ -1,12 +1,13 @@
 <?php
 
-use Oxygen\Preferences\Loader\ConfigLoader;
+use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
+use Oxygen\Preferences\Loader\DatabaseLoader;
 
 Preferences::addGroup('system', 'System');
 
 Preferences::register('system.admin', function($schema) {
     $schema->setTitle('Administration');
-    $schema->setLoader(new ConfigLoader(App::make('config'), 'oxygen/core::config'));
+    $schema->setLoader(new DatabaseLoader(app(PreferenceRepositoryInterface::class), 'system.admin'));
 
     $schema->makeFields([
         '' => [

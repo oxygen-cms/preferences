@@ -2,6 +2,8 @@
 
 namespace Oxygen\Preferences;
 
+use Oxygen\Preferences\Loader\LoaderInterface;
+
 class Repository {
 
     /**
@@ -51,7 +53,8 @@ class Repository {
     }
 
     /**
-     * Get the specified preferences item.
+     * Sets the specified preferences item.
+     * Will not persist changes automatically.
      *
      * @param string $key key using dot notation
      * @param mixed $value new value

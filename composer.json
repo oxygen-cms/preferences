@@ -16,6 +16,8 @@
     "require": {
         "php": ">=5.4.0",
         "oxygen/core": "dev-master",
+        "oxygen/data": "dev-master",
+        "oxygen/theme": "dev-master",
         "illuminate/support": "~5.1.0"
     },
     "autoload": {

@@ -1,11 +1,13 @@
 <?php
 
 use Oxygen\Preferences\Loader\ConfigLoader;
-use Oxygen\Preferences\Loader\ThemeLoader;
+    use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
+    use Oxygen\Preferences\Loader\DatabaseLoader;
+    use Oxygen\Preferences\Loader\ThemeLoader;
 
 Preferences::register('appearance.themes', function($schema) {
     $schema->setTitle('Themes');
-    $schema->setLoader(new ThemeLoader(App::make('config'), App::make('oxygen.themeManager')));
+    $schema->setLoader(new DatabaseLoader(app(PreferenceRepositoryInterface::class), 'appearance.themes'));
     $schema->setView('oxygen/preferences::themes.choose');
 
     $schema->makeField([

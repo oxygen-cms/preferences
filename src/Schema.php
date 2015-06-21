@@ -12,7 +12,6 @@ class Schema {
      *
      * @var string
      */
-
     protected $key;
 
     /**
@@ -20,7 +19,6 @@ class Schema {
      *
      * @var string
      */
-
     protected $title;
 
     /**
@@ -28,7 +26,6 @@ class Schema {
      *
      * @var array
      */
-
     protected $fields;
 
     /**
@@ -36,7 +33,6 @@ class Schema {
      *
      * @var LoaderInterface
      */
-
     protected $loader;
 
     /**
@@ -44,7 +40,6 @@ class Schema {
      *
      * @var Repository
      */
-
     protected $repository;
 
     /**
@@ -52,7 +47,6 @@ class Schema {
      *
      * @var string
      */
-
     protected $view;
 
     /**
@@ -60,7 +54,6 @@ class Schema {
      *
      * @var array
      */
-
     protected $validationRules;
 
     /**
