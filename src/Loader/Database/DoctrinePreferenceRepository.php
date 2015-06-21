@@ -9,6 +9,14 @@ use Oxygen\Data\Repository\Doctrine\Repository;
 class DoctrinePreferenceRepository extends Repository implements PreferenceRepositoryInterface {
 
     /**
+     * The name of the entity.
+     *
+     * @var string
+     */
+
+    protected $entityName = PreferenceItem::class;
+
+    /**
      * Finds an preference item based upon the key.
      *
      * @param string $key
