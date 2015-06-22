@@ -14,7 +14,7 @@ Preferences::register('appearance.admin', function($schema) {
         '' => [
             '' => [
                 [
-                    'name' => 'layout',
+                    'name' => 'adminLayout',
                     'label' => 'Admin Layout',
                     'validationRules' => [
                         'view_exists'

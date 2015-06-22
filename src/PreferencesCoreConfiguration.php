@@ -29,7 +29,7 @@ class PreferencesCoreConfiguration implements CoreConfiguration {
      *
      * @return mixed
      */
-    public function getLayout() {
-        $this->preferences->get('appearance.admin')->getRepository()->get('layout');
+    public function getAdminLayout() {
+        $this->preferences->get('appearance.admin')->getRepository()->get('adminLayout');
     }
 }
