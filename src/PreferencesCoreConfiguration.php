@@ -2,7 +2,7 @@
 
 namespace Oxygen\Preferences;
 
-use Oxygen\Core\CoreConfiguration;
+use Oxygen\Core\Contracts\CoreConfiguration;
 
 class PreferencesCoreConfiguration implements CoreConfiguration {
 

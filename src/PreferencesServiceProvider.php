@@ -2,7 +2,7 @@
 
 namespace Oxygen\Preferences;
 
-use Oxygen\Core\CoreConfiguration;
+use Oxygen\Core\Contracts\CoreConfiguration;
 use Oxygen\Data\BaseServiceProvider;
 use Oxygen\Preferences\Loader\Database\DoctrinePreferenceRepository;
 use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
