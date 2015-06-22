@@ -13,8 +13,8 @@ Preferences::register('system.admin', function($schema) {
         '' => [
             '' => [
                 [
-                    'name'  => 'baseURI',
-                    'label' => 'Base URL'
+                    'name'  => 'adminUriPrefix',
+                    'label' => 'Admin URI Prefix'
                 ]
             ]
         ]

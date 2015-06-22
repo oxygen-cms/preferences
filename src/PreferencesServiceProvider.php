@@ -2,6 +2,7 @@
 
 namespace Oxygen\Preferences;
 
+use Oxygen\Core\CoreConfiguration;
 use Oxygen\Data\BaseServiceProvider;
 use Oxygen\Preferences\Loader\Database\DoctrinePreferenceRepository;
 use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
@@ -37,6 +38,7 @@ class PreferencesServiceProvider extends BaseServiceProvider {
 
 	public function register() {
         $this->app->bind(ThemeLoader::class, PreferencesThemeLoader::class);
+        $this->app->bind(CoreConfiguration::class, PreferencesCoreConfiguration::class);
 
         $this->app->bind(PreferenceRepositoryInterface::class, DoctrinePreferenceRepository::class);
 
