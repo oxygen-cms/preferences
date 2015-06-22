@@ -45,10 +45,9 @@ class DatabaseLoader implements LoaderInterface {
      * Stores the preferences.
      *
      * @param Repository $repository
-     * @param Schema $schema
      * @return void
      */
-    public function store(Repository $repository, Schema $schema) {
+    public function store(Repository $repository) {
         $item = $this->repository->findByKey($this->key);
         $item->setPreferences($repository);
         $this->repository->persist($item);

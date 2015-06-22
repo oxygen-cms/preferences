@@ -138,7 +138,7 @@ class Schema {
     public function storeRepository() {
         $this->resolveLoader();
 
-        $this->loader->store($this->repository, $this);
+        $this->loader->store($this->repository);
     }
 
     /**
