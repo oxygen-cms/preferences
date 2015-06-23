@@ -18,18 +18,18 @@ class PreferencesCoreConfiguration implements CoreConfiguration {
     /**
      * Returns the base URI to be used by Oxygen
      *
-     * @return mixed
+     * @return string
      */
     public function getAdminURIPrefix() {
-        $this->preferences->get('system.admin')->getRepository()->get('adminUriPrefix');
+        return $this->preferences->get('system.admin')->getRepository()->get('adminUriPrefix');
     }
 
     /**
      * Returns the base URI to be used by Oxygen
      *
-     * @return mixed
+     * @return string
      */
     public function getAdminLayout() {
-        $this->preferences->get('appearance.admin')->getRepository()->get('adminLayout');
+        return $this->preferences->get('appearance.admin')->getRepository()->get('adminLayout');
     }
 }
