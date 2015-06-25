@@ -120,7 +120,7 @@ class PreferenceItem implements Validatable {
         return [
             'key' => [
                 'required',
-                'slug'
+                'alphaDot'
             ]
         ];
     }
