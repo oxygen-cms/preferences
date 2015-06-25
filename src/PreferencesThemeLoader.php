@@ -19,7 +19,7 @@ class PreferencesThemeLoader implements ThemeLoader {
      * @return string
      */
     public function getCurrentTheme() {
-        return $this->preferences->getSchema('appearance.themes::theme');
+        return $this->preferences->get('appearance.themes::theme');
     }
 
     /**

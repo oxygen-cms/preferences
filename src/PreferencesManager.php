@@ -133,7 +133,7 @@ class PreferencesManager {
      * @return boolean
      */
     public function loadSchema($key) {
-        if($this->isRoot($key)) {
+        if($this->isRootKey($key)) {
             $schemas = $this->lazySchemas;
         } else {
             $schemas = array_where($this->lazySchemas, function($possibleKey) use($key) {
