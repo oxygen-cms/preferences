@@ -103,10 +103,10 @@ class PreferencesManager {
      * @param callable $callback
      * @return Schema
      */
-    public function edit($key, callable $callback) {
-        $schema = $this->get($key);
+    public function editSchema($key, callable $callback) {
+        $schema = $this->getSchema($key);
         $callback($schema);
-        $this->add($schema);
+        $this->addSchema($schema);
     }
 
     /**
@@ -116,8 +116,8 @@ class PreferencesManager {
      * @return Schema
      * @throws InvalidArgumentException If the key can't be found.
      */
-    public function get($key) {
-        $this->load($key);
+    public function getSchema($key) {
+        $this->loadSchema($key);
 
         $schema = array_get($this->schemas, $key, null);
         if($schema === null) {
@@ -132,7 +132,7 @@ class PreferencesManager {
      * @param string $key
      * @return boolean
      */
-    public function load($key) {
+    public function loadSchema($key) {
         if($this->isRoot($key)) {
             $schemas = $this->lazySchemas;
         } else {
@@ -149,7 +149,7 @@ class PreferencesManager {
             unset($this->lazySchemas[$key]);
             $schema = new Schema($key);
             $callback($schema);
-            $this->add($schema);
+            $this->addSchema($schema);
         }
 
         return true;
@@ -161,7 +161,7 @@ class PreferencesManager {
      * @param Schema $schema
      * @return Schema
      */
-    public function add(Schema $schema) {
+    public function addSchema(Schema $schema) {
         array_set($this->schemas, $schema->getKey(), $schema);
     }
 
@@ -171,8 +171,8 @@ class PreferencesManager {
      * @param string $key
      * @return boolean
      */
-    public function has($key) {
-        $this->load($key);
+    public function hasSchema($key) {
+        $this->loadSchema($key);
 
         return array_get($this->schemas, $key, null) !== null;
     }
@@ -183,7 +183,7 @@ class PreferencesManager {
      * @return array
      */
     public function all() {
-        $this->load('');
+        $this->loadSchema('');
 
         return $this->schemas;
     }
@@ -205,7 +205,7 @@ class PreferencesManager {
      * @param string $key
      * @return string
      */
-    public function group($key) {
+    public function getGroupName($key) {
         return isset($this->groups[$key]) ? $this->groups[$key] : $key;
     }
 
@@ -215,8 +215,19 @@ class PreferencesManager {
      * @param string $key
      * @return boolean
      */
-    public function isRoot($key) {
+    public function isRootKey($key) {
         return $key === '' || $key === null;
+    }
+
+    /**
+     * Returns a preferences value.
+     *
+     * @param string $key eg: `modules.auth::dashboard`
+     * @return mixed
+     */
+    public function get($key) {
+        $parts = explode('::', $key);
+        return $this->getSchema($parts[0])->getRepository()->get($parts[1]);
     }
 
     /**
@@ -225,7 +236,7 @@ class PreferencesManager {
      * @param string $key
      * @return string
      */
-    public function parentGroup($key) {
+    public function getParentGroupName($key) {
         $parts = explode('.', $key);
         array_pop($parts);
         return implode('.', $parts);

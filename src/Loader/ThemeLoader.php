@@ -63,7 +63,7 @@ class ThemeLoader implements LoaderInterface {
             $name = $repository->get('theme');
             $newTheme = $this->themes->get($name);
             foreach($newTheme->getProvides() as $key => $value) {
-                $schema = $this->preferences->get($key);
+                $schema = $this->preferences->getSchema($key);
                 $schema->getRepository()->fill($value);
                 $schema->storeRepository();
             }

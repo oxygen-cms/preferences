@@ -124,7 +124,7 @@ class Schema {
      *
      * @return void
      */
-    public function loadRepository() {
+    protected function loadRepository() {
         $this->resolveLoader();
 
         $this->repository = $this->loader->load();

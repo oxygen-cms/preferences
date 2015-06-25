@@ -21,7 +21,7 @@ class PreferencesCoreConfiguration implements CoreConfiguration {
      * @return string
      */
     public function getAdminURIPrefix() {
-        return $this->preferences->get('system.admin')->getRepository()->get('adminUriPrefix');
+        return $this->preferences->get('system.admin::adminUriPrefix');
     }
 
     /**
@@ -30,6 +30,6 @@ class PreferencesCoreConfiguration implements CoreConfiguration {
      * @return string
      */
     public function getAdminLayout() {
-        return $this->preferences->get('appearance.admin')->getRepository()->get('adminLayout');
+        return $this->preferences->get('appearance.admin::adminLayout');
     }
 }

@@ -19,7 +19,7 @@ class PreferencesThemeLoader implements ThemeLoader {
      * @return string
      */
     public function getCurrentTheme() {
-        return $this->preferences->get('appearance.themes')->getRepository()->get('theme');
+        return $this->preferences->getSchema('appearance.themes::theme');
     }
 
     /**
@@ -28,7 +28,7 @@ class PreferencesThemeLoader implements ThemeLoader {
      * @param string $theme the name of the new theme
      */
     public function setCurrentTheme($theme) {
-        $schema = $this->preferences->get('appearance.themes');
+        $schema = $this->preferences->getSchema('appearance.themes');
         $schema->getRepository()->set('theme', $theme);
         $schema->storeRepository();
     }
