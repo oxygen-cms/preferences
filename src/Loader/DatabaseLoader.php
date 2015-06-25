@@ -44,7 +44,7 @@ class DatabaseLoader implements LoaderInterface {
         try {
             return $this->repository->findByKey($this->key)->getPreferences();
         } catch(NoResultException $e) {
-            throw new PreferenceNotFoundException('Preference Key ' . $this->key . ' Not Found In Database', $e);
+            throw new PreferenceNotFoundException('Preference Key ' . $this->key . ' Not Found In Database', 0, $e);
         }
     }
 
