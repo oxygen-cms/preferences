@@ -2,7 +2,9 @@
 
 namespace Oxygen\Preferences\Loader;
 
+use Oxygen\Data\Exception\NoResultException;
 use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
+use Oxygen\Preferences\PreferenceNotFoundException;
 use Oxygen\Preferences\Repository;
 use Oxygen\Preferences\Schema;
 
@@ -35,10 +37,15 @@ class DatabaseLoader implements LoaderInterface {
     /**
      * Loads the preferences and returns the repository.
      *
-     * @return Repository
+     * @return \Oxygen\Preferences\Repository
+     * @throws \Oxygen\Preferences\PreferenceNotFoundException
      */
     public function load() {
-        return $this->repository->findByKey($this->key)->getPreferences();
+        try {
+            return $this->repository->findByKey($this->key)->getPreferences();
+        } catch(NoResultException $e) {
+            throw new PreferenceNotFoundException('Preference Key ' . $this->key . ' Not Found In Database', $e);
+        }
     }
 
     /**
