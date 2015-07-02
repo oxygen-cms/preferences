@@ -9,7 +9,6 @@ use Oxygen\Theme\ThemeManager;
 Preferences::register('appearance.themes', function($schema) {
     $schema->setTitle('Themes');
     $schema->setLoader(new ThemeLoader(new DatabaseLoader(app(PreferenceRepositoryInterface::class), 'appearance.themes'), app(PreferencesManager::class), app(ThemeManager::class), 'theme', 'theme'));
-    $schema->setView('oxygen/mod-preferences::themes.choose');
 
     $schema->makeField([
         'name' => 'theme',

@@ -32,12 +32,20 @@ class PreferencesManager {
     protected $groups;
 
     /**
+     * Callbacks that will be fired when a schema is resolved
+     *
+     * @var array
+     */
+    protected $resolvingCallbacks = [];
+
+    /**
      * Constructs the PreferencesManager.
      */
     public function __construct() {
         $this->schemas = [];
         $this->lazySchemas = [];
         $this->groups  = [];
+        $this->resolvingCallbacks = [];
     }
 
     /**
@@ -97,16 +105,19 @@ class PreferencesManager {
     }
 
     /**
-     * Edits a schema from the PreferencesManager
+     * Extends a schema from the PreferencesManager
      *
      * @param string $key
      * @param callable $callback
      * @return Schema
      */
-    public function editSchema($key, callable $callback) {
-        $schema = $this->getSchema($key);
-        $callback($schema);
-        $this->addSchema($schema);
+    public function extendSchema($key, callable $callback) {
+        if(isset($this->schemas[$key])) {
+            $callback($this->schemas[$key]);
+        } else {
+            $this->resolvingCallbacks[$key][] = $callback;
+        }
+
     }
 
     /**
@@ -149,6 +160,12 @@ class PreferencesManager {
             unset($this->lazySchemas[$key]);
             $schema = new Schema($key);
             $callback($schema);
+            // schema extensions
+            if(isset($this->resolvingCallbacks[$key])) {
+                foreach($this->resolvingCallbacks[$key] as $callback) {
+                    $callback($schema);
+                }
+            }
             $this->addSchema($schema);
         }
 
