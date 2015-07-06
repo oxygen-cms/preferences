@@ -26,7 +26,6 @@ class PreferencesServiceProvider extends BaseServiceProvider {
 
 	public function boot() {
         $this->app[PreferencesManager::class]->loadDirectory(__DIR__ . '/../resources/preferences');
-        $this->loadEntitiesFrom(__DIR__ . '/Loader/Database');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'oxygen/preferences');
 	}
 
@@ -37,6 +36,8 @@ class PreferencesServiceProvider extends BaseServiceProvider {
 	 */
 
 	public function register() {
+        $this->loadEntitiesFrom(__DIR__ . '/Loader/Database');
+
         $this->app->bind(ThemeLoader::class, PreferencesThemeLoader::class);
         $this->app->bind(CoreConfiguration::class, PreferencesCoreConfiguration::class);
 
