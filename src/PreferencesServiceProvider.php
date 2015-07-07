@@ -29,7 +29,7 @@ class PreferencesServiceProvider extends BaseServiceProvider {
         $this->app[PreferencesManager::class]->loadDirectory(__DIR__ . '/../resources/preferences');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'oxygen/preferences');
 
-        $this->app[AutomaticMigrator::class]->loadMigrationsFrom(__DIR__ . '/../migrations');
+        $this->app[AutomaticMigrator::class]->loadMigrationsFrom(__DIR__ . '/../migrations', 'oxygen/preferences');
 	}
 
 	/**
