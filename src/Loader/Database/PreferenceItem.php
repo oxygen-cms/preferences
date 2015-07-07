@@ -16,7 +16,7 @@ use Oxygen\Preferences\Transformer\JsonTransformer;
  */
 class PreferenceItem implements Validatable {
 
-    use PrimaryKey, Accessors;
+    use PrimaryKey;
 
     /**
      * @ORM\Column(type="string")
@@ -42,6 +42,22 @@ class PreferenceItem implements Validatable {
      * @var Repository
      */
     protected $preferencesRepository;
+
+    /**
+     * Returns the key of the preferences.
+     * @return string
+     */
+    public function getKey() {
+        return $this->key;
+    }
+
+    /**
+     * Sets the key of the preferences.
+     * @param string $key
+     */
+    public function setKey($key) {
+        $this->key = $key;
+    }
 
     /**
      * Returns the preferences repository.

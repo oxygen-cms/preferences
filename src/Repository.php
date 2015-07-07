@@ -69,6 +69,16 @@ class Repository {
     }
 
     /**
+     * Checks if the preferences item has been set.
+     *
+     * @param string $key key using dot notation
+     * @return boolean
+     */
+    public function has($key) {
+        return array_get($this->preferences, $key, null) != null;
+    }
+
+    /**
      * Determines if the specified preferences item has changed since last being persisted.
      * In other words, if the key needs to be persisted again.
      *

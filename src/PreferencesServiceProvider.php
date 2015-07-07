@@ -3,6 +3,7 @@
 namespace Oxygen\Preferences;
 
 use Oxygen\Core\Contracts\CoreConfiguration;
+use Oxygen\Core\Database\AutomaticMigrator;
 use Oxygen\Data\BaseServiceProvider;
 use Oxygen\Preferences\Loader\Database\DoctrinePreferenceRepository;
 use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
@@ -27,6 +28,8 @@ class PreferencesServiceProvider extends BaseServiceProvider {
 	public function boot() {
         $this->app[PreferencesManager::class]->loadDirectory(__DIR__ . '/../resources/preferences');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'oxygen/preferences');
+
+        $this->app[AutomaticMigrator::class]->loadMigrationsFrom(__DIR__ . '/../migrations');
 	}
 
 	/**
