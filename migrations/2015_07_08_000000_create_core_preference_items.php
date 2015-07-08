@@ -4,14 +4,16 @@ use Illuminate\Database\Migrations\Migration;
 use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
 use Oxygen\Preferences\Repository;
 
+use App;
+
 class CreateCorePreferenceItems extends Migration {
 
     /**
      * Run the migrations.
-     *
-     * @param \Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface $preferences
      */
-    public function up(PreferenceRepositoryInterface $preferences) {
+    public function up() {
+        $preferences = App::make(PreferenceRepositoryInterface::class);
+
         $item = $preferences->make();
         $item->setKey('appearance.admin');
         $data = new Repository([]);
@@ -38,12 +40,14 @@ class CreateCorePreferenceItems extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @param \Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface $preferences
      */
-    public function down(PreferenceRepositoryInterface $preferences) {
-        $preferences->delete($preferences->findByKey('appearance.admin'));
-        $preferences->delete($preferences->findByKey('appearance.themes'));
-        $preferences->delete($preferences->findByKey('system.admin'));
+    public function down() {
+        $preferences = App::make(PreferenceRepositoryInterface::class);
+
+        $preferences->delete($preferences->findByKey('appearance.admin'), false);
+        $preferences->delete($preferences->findByKey('appearance.themes'), false);
+        $preferences->delete($preferences->findByKey('system.admin'), false);
+
+        $preferences->flush();
     }
 }
