@@ -132,7 +132,7 @@ class PreferencesManager {
 
         $schema = array_get($this->schemas, $key, null);
         if($schema === null) {
-            throw new InvalidArgumentException('Key "' . $key . '" not found.');
+            throw new InvalidArgumentException('Schema "' . $key . '" not found.');
         }
         return $schema;
     }
