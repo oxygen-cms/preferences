@@ -5,6 +5,8 @@ namespace Oxygen\Preferences;
 use Oxygen\Core\Contracts\CoreConfiguration;
 use Oxygen\Core\Database\AutomaticMigrator;
 use Oxygen\Data\BaseServiceProvider;
+use Oxygen\Data\Cache\CacheSettingsRepositoryInterface;
+use Oxygen\Preferences\Cache\CacheSettingsRepository;
 use Oxygen\Preferences\Loader\Database\DoctrinePreferenceRepository;
 use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
 use Oxygen\Theme\ThemeLoader;
@@ -37,13 +39,13 @@ class PreferencesServiceProvider extends BaseServiceProvider {
 	 *
 	 * @return void
 	 */
-
 	public function register() {
         $this->loadEntitiesFrom(__DIR__ . '/Loader/Database');
 
-        $this->app->bind(ThemeLoader::class, PreferencesThemeLoader::class);
-        $this->app->bind(CoreConfiguration::class, PreferencesCoreConfiguration::class);
-
+        $this->app->bind(ThemeLoader::class, PreferencesThemeLoader::class); // from `oxygen/theme`
+        $this->app->bind(CoreConfiguration::class, PreferencesCoreConfiguration::class); // from `oxygen/core`
+		$this->app->bind(CacheSettingsRepositoryInterface::class, CacheSettingsRepository::class); // from `oxygen/data`
+		
         $this->app->bind(PreferenceRepositoryInterface::class, DoctrinePreferenceRepository::class);
 
 	    $this->app->singleton(PreferencesManager::class, function() {
