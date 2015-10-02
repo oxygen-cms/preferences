@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\UnitOfWork;
 use Oxygen\Data\Behaviour\PrimaryKeyInterface;
 use Oxygen\Data\Cache\CacheSettingsRepositoryInterface;
+use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
 use Oxygen\Preferences\PreferencesManager;
 
 class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
@@ -17,9 +18,12 @@ class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
      */
     protected $entityManager;
 
-    public function __construct(PreferencesManager $manager, EntityManager $manager) {
+    protected $preferencesRepository;
+
+    public function __construct(PreferencesManager $manager, EntityManager $entities, PreferenceRepositoryInterface $repository) {
         $this->preferences = $manager;
-        $this->entityManager = $manager;
+        $this->entityManager = $entities;
+        $this->preferencesRepository = $repository;
     }
 
     /**
@@ -33,20 +37,32 @@ class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
         return array_get($entities, $className, []);
     }
 
-    public function persistWithinOnFlush() {
-        $entity = $this->repository->findByKey('cacheSettings');
-        $metadata = $this->entityManager->getClassMetadata(get_class($entity));
-        $this->entityManager->getUnitOfWork()->computeChangeSet($metadata, $entity);
+    /**
+     * This relies of the fact that the preferences use the `DatabaseLoader` most of the time.
+     *
+     * @param bool|false $withinOnFlush
+     */
+    public function persist($withinOnFlush = false) {
+        // special handling for 'persisting' inside Doctrine's `onFlush` event
+        if($withinOnFlush) {
+            $entity = $this->preferencesRepository->findByKey('cacheSettings');
+            // manually changes the preferences
+            $entity->setPreferences($this->preferences->getSchema('cacheSettings')->getRepository());
+            $metadata = $this->entityManager->getClassMetadata(get_class($entity));
+            $this->entityManager->getUnitOfWork()->computeChangeSet($metadata, $entity);
+        } else {
+            $this->preferences->getSchema('cacheSettings')->storeRepository();
+        }
     }
 
     public function add($class, PrimaryKeyInterface $entity) {
         $deps = array_get($this->preferences->get('cacheSettings::entities'), $class, []);
-        $deps[] = $entity;
+        $deps[] = $this->getInfo($entity);
 
         // removes duplicates from the array
         $deps = array_intersect_key($deps, array_unique(array_map('serialize', $deps)));
 
-        $this->preferences->getSchema('cacheSettings')->getRepository()->set('entities', $deps);
+        $this->preferences->getSchema('cacheSettings')->getRepository()->set('entities.' .$class, $deps);
     }
 
     public function remove($class, PrimaryKeyInterface $entity) {
@@ -55,7 +71,7 @@ class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
         $deps = array_filter($deps, function($value) use($info) {
             return $value != $info;
         });
-        $this->preferences->getSchema('cacheSettings')->getRepository()->set('entities', $deps);
+        $this->preferences->getSchema('cacheSettings')->getRepository()->set('entities.' . $class, $deps);
     }
 
     private function getInfo(PrimaryKeyInterface $object) {
