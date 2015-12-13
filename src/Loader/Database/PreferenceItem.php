@@ -91,7 +91,7 @@ class PreferenceItem implements Validatable {
      * @return $this
      */
     public function setPreferencesAsString($preferences) {
-        $this->preferences = $preferences;
+        $this->contents = $preferences;
         $this->preferencesRepository = $this->createPreferencesRepository();
         return $this;
     }
