@@ -3,6 +3,7 @@
 namespace Oxygen\Preferences\Loader\Database;
 
 use Exception;
+use Doctrine\ORM\NoResultException as DoctrineNoResultException;
 use Oxygen\Data\Exception\NoResultException;
 use Oxygen\Data\Repository\Doctrine\Repository;
 
@@ -32,7 +33,7 @@ class DoctrinePreferenceRepository extends Repository implements PreferenceRepos
 
         try {
             return $q->getSingleResult();
-        } catch(Exception $e) {
+        } catch(DoctrineNoResultException $e) {
             throw $this->makeNoResultException($e, $q);
         }
     }
