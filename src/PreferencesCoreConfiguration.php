@@ -23,7 +23,7 @@ class PreferencesCoreConfiguration implements CoreConfiguration {
     public function getAdminURIPrefix() {
         try {
             return $this->preferences->get('system.admin::adminUriPrefix');
-        } catch(PreferenceNotFoundException $e) {
+        } catch(\Exception $e) {
             return 'oxygen';
         }
     }
