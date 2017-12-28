@@ -33,8 +33,12 @@ class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
      * @return array
      */
     public function get($className) {
-        $entities = $this->preferences->getSchema('cacheSettings')->getRepository()->get('entities', []);
-        return array_get($entities, $className, []);
+        try {
+            $entities = $this->preferences->getSchema('cacheSettings')->getRepository()->get('entities', []);
+            return array_get($entities, $className, []);
+        } catch(\Oxygen\Preferences\PreferenceNotFoundException $e) {
+            return [];
+        }
     }
 
     /**

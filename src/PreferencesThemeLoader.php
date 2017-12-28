@@ -4,6 +4,7 @@
 namespace Oxygen\Preferences;
 
 use Oxygen\Theme\ThemeLoader;
+use Oxygen\Theme\ThemeNotFoundException;
 
 class PreferencesThemeLoader implements ThemeLoader {
 
@@ -19,7 +20,11 @@ class PreferencesThemeLoader implements ThemeLoader {
      * @return string
      */
     public function getCurrentTheme() {
-        return $this->preferences->get('appearance.themes::theme');
+        try {
+            return $this->preferences->get('appearance.themes::theme');
+        } catch(PreferenceNotFoundException $e) {
+            throw new ThemeNotFoundException($e);
+        }
     }
 
     /**

@@ -242,9 +242,17 @@ class PreferencesManager {
      * @param string $key eg: `modules.auth::dashboard`
      * @return mixed
      */
-    public function get($key) {
+    public function get($key, $default = null) {
         $parts = explode('::', $key);
-        return $this->getSchema($parts[0])->getRepository()->get($parts[1]);
+        try {
+            return $this->getSchema($parts[0])->getRepository()->get($parts[1]);
+        } catch(PreferenceNotFoundException $e) {
+            if($default !== null) {
+                return $default;
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**

@@ -29,11 +29,11 @@ class PreferencesCoreConfiguration implements CoreConfiguration {
     }
 
     /**
-     * Returns the base URI to be used by Oxygen
+     * Returns the layout for the administration section.
      *
      * @return string
      */
     public function getAdminLayout() {
-        return $this->preferences->get('appearance.admin::adminLayout');
+        return $this->preferences->get('appearance.admin::adminLayout', 'oxygen/ui-base::layout.main');
     }
 }
