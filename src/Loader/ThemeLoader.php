@@ -7,6 +7,7 @@ use Oxygen\Preferences\PreferencesManager;
 use Oxygen\Preferences\Repository;
 use Oxygen\Preferences\Schema;
 use Oxygen\Theme\ThemeManager;
+use Oxygen\Theme\ThemeNotFoundException;
 
 class ThemeLoader implements LoaderInterface {
 
@@ -27,9 +28,9 @@ class ThemeLoader implements LoaderInterface {
     private $backendName;
 
     /**
-     * @param \Oxygen\Preferences\Loader\LoaderInterface $parent
-     * @param \Oxygen\Preferences\PreferencesManager     $preferences
-     * @param \Oxygen\Theme\ThemeManager                 $themes
+     * @param LoaderInterface $parent
+     * @param PreferencesManager $preferences
+     * @param ThemeManager $themes
      * @param string                                     $frontendName
      * @param string                                     $backendName
      */
@@ -56,7 +57,7 @@ class ThemeLoader implements LoaderInterface {
      * Stores the preferences.
      *
      * @param Repository                 $repository
-     * @throws \Oxygen\Theme\ThemeNotFoundException
+     * @throws ThemeNotFoundException
      */
     public function store(Repository $repository) {
         if($repository->hasChanged($this->frontendName)) {

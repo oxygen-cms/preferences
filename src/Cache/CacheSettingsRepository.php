@@ -8,6 +8,7 @@ use Oxygen\Data\Behaviour\PrimaryKeyInterface;
 use Oxygen\Data\Cache\CacheSettingsRepositoryInterface;
 use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
 use Oxygen\Preferences\PreferencesManager;
+use Illuminate\Support\Arr;
 
 class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
 
@@ -29,13 +30,13 @@ class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
     /**
      * Returns a list of entities whose caches should be invalidated when any entity of the given class is updated.
      *
-     * @param $className
+     * @param string $className
      * @return array
      */
     public function get($className) {
         try {
             $entities = $this->preferences->getSchema('cacheSettings')->getRepository()->get('entities', []);
-            return array_get($entities, $className, []);
+            return Arr::get($entities, $className, []);
         } catch(\Oxygen\Preferences\PreferenceNotFoundException $e) {
             return [];
         }
@@ -60,7 +61,7 @@ class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
     }
 
     public function add($class, PrimaryKeyInterface $entity) {
-        $deps = array_get($this->preferences->get('cacheSettings::entities'), $class, []);
+        $deps = Arr::get($this->preferences->get('cacheSettings::entities'), $class, []);
         $deps[] = $this->getInfo($entity);
 
         // removes duplicates from the array
@@ -70,7 +71,7 @@ class CacheSettingsRepository implements CacheSettingsRepositoryInterface {
     }
 
     public function remove($class, PrimaryKeyInterface $entity) {
-        $deps = array_get($this->preferences->get('cacheSettings::entities'), $class, []);
+        $deps = Arr::get($this->preferences->get('cacheSettings::entities'), $class, []);
         $info = $this->getInfo($entity);
         $deps = array_filter($deps, function($value) use($info) {
             return $value != $info;

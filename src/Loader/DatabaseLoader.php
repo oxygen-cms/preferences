@@ -13,7 +13,7 @@ class DatabaseLoader implements LoaderInterface {
     /**
      * Config repository to use.
      *
-     * @var Repository
+     * @var PreferenceRepositoryInterface
      */
     protected $repository;
 

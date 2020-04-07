@@ -2,14 +2,19 @@
 
 namespace Oxygen\Preferences;
 
+use Exception;
 use Oxygen\Core\Contracts\CoreConfiguration;
 
 class PreferencesCoreConfiguration implements CoreConfiguration {
+    /**
+     * @var PreferencesManager
+     */
+    private $preferences;
 
     /**
      * Constructs the preferences.
      *
-     * @param \Oxygen\Preferences\PreferencesManager $preferences
+     * @param PreferencesManager $preferences
      */
     public function __construct(PreferencesManager $preferences) {
         $this->preferences = $preferences;
@@ -23,7 +28,7 @@ class PreferencesCoreConfiguration implements CoreConfiguration {
     public function getAdminURIPrefix() {
         try {
             return $this->preferences->get('system.admin::adminUriPrefix');
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return 'oxygen';
         }
     }
@@ -32,6 +37,7 @@ class PreferencesCoreConfiguration implements CoreConfiguration {
      * Returns the layout for the administration section.
      *
      * @return string
+     * @throws PreferenceNotFoundException
      */
     public function getAdminLayout() {
         return $this->preferences->get('appearance.admin::adminLayout', 'oxygen/ui-base::layout.main');

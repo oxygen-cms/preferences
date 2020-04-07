@@ -3,6 +3,7 @@
 namespace Oxygen\Preferences;
 
 use Oxygen\Preferences\Loader\LoaderInterface;
+use Illuminate\Support\Arr;
 
 class Repository {
 
@@ -11,7 +12,6 @@ class Repository {
      *
      * @var array
      */
-
     protected $preferences;
 
     /**
@@ -19,8 +19,12 @@ class Repository {
      *
      * @var array
      */
-
     protected $changed;
+
+    /**
+     * @var LoaderInterface
+     */
+    private $loader;
 
     /**
      * Constructs the Preferences Repository
@@ -49,7 +53,7 @@ class Repository {
      * @return mixed
      */
     public function get($key, $default = '') {
-        return array_get($this->preferences, $key, $default);
+        return Arr::get($this->preferences, $key, $default);
     }
 
     /**
@@ -61,9 +65,9 @@ class Repository {
      * @return void
      */
     public function set($key, $value) {
-        $old = array_get($this->preferences, $key, null);
+        $old = Arr::get($this->preferences, $key, null);
         if($old !== $value) {
-            array_set($this->preferences, $key, $value);
+            Arr::set($this->preferences, $key, $value);
             $this->changed[$key] = true;
         }
     }
@@ -75,7 +79,7 @@ class Repository {
      * @return boolean
      */
     public function has($key) {
-        return array_get($this->preferences, $key, null) != null;
+        return Arr::get($this->preferences, $key, null) != null;
     }
 
     /**

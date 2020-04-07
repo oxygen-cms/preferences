@@ -4,6 +4,8 @@ namespace Oxygen\Preferences;
 
 use DirectoryIterator;
 use InvalidArgumentException;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class PreferencesManager {
 
@@ -61,7 +63,7 @@ class PreferencesManager {
         } else {
             $iterator = new DirectoryIterator($directory);
             foreach($iterator as $file) {
-                if($file->isFile() && ends_with($file->getFilename(), '.php')) {
+                if($file->isFile() && Str::endsWith($file->getFilename(), '.php')) {
                     require $directory . '/' . $file->getFilename();
                 }
             }
@@ -109,7 +111,6 @@ class PreferencesManager {
      *
      * @param string $key
      * @param callable $callback
-     * @return Schema
      */
     public function extendSchema($key, callable $callback) {
         if(isset($this->schemas[$key])) {
@@ -117,7 +118,6 @@ class PreferencesManager {
         } else {
             $this->resolvingCallbacks[$key][] = $callback;
         }
-
     }
 
     /**
@@ -130,7 +130,7 @@ class PreferencesManager {
     public function getSchema($key) {
         $this->loadSchema($key);
 
-        $schema = array_get($this->schemas, $key, null);
+        $schema = Arr::get($this->schemas, $key, null);
         if($schema === null) {
             throw new InvalidArgumentException('Schema "' . $key . '" not found.');
         }
@@ -147,8 +147,8 @@ class PreferencesManager {
         if($this->isRootKey($key)) {
             $schemas = $this->lazySchemas;
         } else {
-            $schemas = array_where($this->lazySchemas, function($possibleKey) use($key) {
-                return starts_with($possibleKey, $key);
+            $schemas = Arr::where($this->lazySchemas, function($possibleKey) use($key) {
+                return Str::startsWith($possibleKey, $key);
             });
         }
 
@@ -176,10 +176,9 @@ class PreferencesManager {
      * Adds a schema to the PreferencesManager
      *
      * @param Schema $schema
-     * @return Schema
      */
     public function addSchema(Schema $schema) {
-        array_set($this->schemas, $schema->getKey(), $schema);
+        Arr::set($this->schemas, $schema->getKey(), $schema);
     }
 
     /**
@@ -191,7 +190,7 @@ class PreferencesManager {
     public function hasSchema($key) {
         $this->loadSchema($key);
 
-        return array_get($this->schemas, $key, null) !== null;
+        return Arr::get($this->schemas, $key, null) !== null;
     }
 
     /**
@@ -240,7 +239,9 @@ class PreferencesManager {
      * Returns a preferences value.
      *
      * @param string $key eg: `modules.auth::dashboard`
+     * @param mixed|null $default
      * @return mixed
+     * @throws PreferenceNotFoundException
      */
     public function get($key, $default = null) {
         $parts = explode('::', $key);
