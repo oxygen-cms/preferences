@@ -147,7 +147,7 @@ class PreferencesManager {
         if($this->isRootKey($key)) {
             $schemas = $this->lazySchemas;
         } else {
-            $schemas = Arr::where($this->lazySchemas, function($possibleKey) use($key) {
+            $schemas = Arr::where($this->lazySchemas, function($value, $possibleKey) use($key) {
                 return Str::startsWith($possibleKey, $key);
             });
         }

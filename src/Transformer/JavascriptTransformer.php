@@ -13,6 +13,7 @@ class JavascriptTransformer extends JsonTransformer {
      *
      * @param string $json
      * @return Repository
+     * @throws Exception
      */
     public function toRepository($json) {
         throw new Exception("Cannot convert Javascript object to Preferences Repository");
@@ -27,7 +28,15 @@ class JavascriptTransformer extends JsonTransformer {
      * @return string
      */
     public function fromRepository(Repository $repository, $variableName = 'preferences', $pretty = false) {
-        return '<script>' . 'var ' . $variableName . ' = ' . parent::fromRepository($repository) . ';</script>';
+        $code = '<script>';
+        $start = '';
+        foreach(explode('.', $variableName) as $part) {
+            $access = $start . $part;
+            $code .= "if(typeof {$access} === 'undefined') {{$access}={};}";
+            $start .= $part . '.';
+        }
+        $code .= $variableName . ' = ' . parent::fromRepository($repository) . ';</script>';
+        return $code;
     }
 
 }
