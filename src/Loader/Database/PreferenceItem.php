@@ -19,7 +19,7 @@ class PreferenceItem implements Validatable {
     use PrimaryKey;
 
     /**
-     * @ORM\Column(name="``key`", type="string")
+     * @ORM\Column(name="``key`", type="string", unique=true)
      */
     protected $key;
 
