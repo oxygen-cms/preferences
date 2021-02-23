@@ -43,9 +43,8 @@ class PreferencesServiceProvider extends BaseServiceProvider {
         $this->loadEntitiesFrom(__DIR__ . '/Loader/Database');
 
         $this->app->bind(ThemeLoader::class, PreferencesThemeLoader::class); // from `oxygen/theme`
-        $this->app->bind(CoreConfiguration::class, PreferencesCoreConfiguration::class); // from `oxygen/core`
 		$this->app->bind(CacheSettingsRepositoryInterface::class, CacheSettingsRepository::class); // from `oxygen/data`
-		
+
         $this->app->bind(PreferenceRepositoryInterface::class, DoctrinePreferenceRepository::class);
 
 	    $this->app->singleton(PreferencesManager::class, function() {
