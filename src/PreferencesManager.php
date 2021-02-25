@@ -131,7 +131,7 @@ class PreferencesManager {
         $this->loadSchema($key);
 
         $schema = Arr::get($this->schemas, $key, null);
-        if($schema === null) {
+        if($schema == null) {
             throw new InvalidArgumentException('Schema "' . $key . '" not found.');
         }
         return $schema;
@@ -232,7 +232,7 @@ class PreferencesManager {
      * @return boolean
      */
     public function isRootKey($key) {
-        return $key === '' || $key === null;
+        return $key === '' || $key == null;
     }
 
     /**
