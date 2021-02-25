@@ -23,11 +23,11 @@ class JavascriptTransformer extends JsonTransformer {
      * Converts a preferences repository into a JSON string.
      *
      * @param Repository $repository
-     * @param string     $variableName
      * @param boolean    $pretty
+     * @param string     $variableName
      * @return string
      */
-    public function fromRepository(Repository $repository, $variableName = 'preferences', $pretty = false) {
+    public function fromRepository(Repository $repository, $pretty = false, $variableName = 'preferences') {
         $code = '<script>';
         $start = '';
         foreach(explode('.', $variableName) as $part) {
