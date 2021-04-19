@@ -2,7 +2,6 @@
 
 namespace Oxygen\Preferences\Loader\Database;
 
-use Exception;
 use Doctrine\ORM\NoResultException as DoctrineNoResultException;
 use Oxygen\Data\Exception\NoResultException;
 use Oxygen\Data\Repository\Doctrine\Repository;
@@ -21,8 +20,8 @@ class DoctrinePreferenceRepository extends Repository implements PreferenceRepos
      * Finds an preference item based upon the key.
      *
      * @param string $key
-     * @return \Oxygen\Preferences\Loader\Database\PreferenceItem
-     * @throws \Oxygen\Data\Exception\NoResultException if the key doesn't exist
+     * @return PreferenceItem
+     * @throws NoResultException if the key doesn't exist
      */
     public function findByKey($key) {
         $q = $this->getQuery(

@@ -8,14 +8,22 @@ use Oxygen\Theme\ThemeManager;
 
 Preferences::register('appearance.themes', function($schema) {
     $schema->setTitle('Themes');
-    $schema->setLoader(new ThemeLoader(new DatabaseLoader(app(PreferenceRepositoryInterface::class), 'appearance.themes'), app(PreferencesManager::class), app(ThemeManager::class), 'theme', 'theme'));
+    $schema->setLoader(new DatabaseLoader(app(PreferenceRepositoryInterface::class), 'appearance.themes'));
+
+//    new ThemeLoader(
+//
+//        app(PreferencesManager::class),
+//        app(ThemeManager::class),
+//        'theme',
+//        'theme'
+//    ));
 
     $schema->makeField([
         'name' => 'theme',
         'label' => 'Theme',
         'type' => 'select',
         'options' => function() {
-            $themes = Theme::all();
+            $themes = app(ThemeManager::class)->all();
             $return = [];
             foreach($themes as $key => $theme) {
                 $return[$key] = $theme->getName();
