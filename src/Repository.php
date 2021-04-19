@@ -52,7 +52,7 @@ class Repository {
      * @param mixed $default default value
      * @return mixed
      */
-    public function get($key, $default = '') {
+    public function get($key, $default = null) {
         return Arr::get($this->preferences, $key, $default);
     }
 

@@ -3,7 +3,6 @@
 namespace Oxygen\Preferences;
 
 use DirectoryIterator;
-use InvalidArgumentException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 
@@ -39,15 +38,21 @@ class PreferencesManager {
      * @var array
      */
     protected $resolvingCallbacks = [];
+    /**
+     * @var PreferencesFallbackInterface
+     */
+    private $fallback;
 
     /**
      * Constructs the PreferencesManager.
+     * @param PreferencesFallbackInterface $fallback
      */
-    public function __construct() {
+    public function __construct(PreferencesFallbackInterface $fallback) {
         $this->schemas = [];
         $this->lazySchemas = [];
         $this->groups  = [];
         $this->resolvingCallbacks = [];
+        $this->fallback = $fallback;
     }
 
     /**
@@ -57,7 +62,7 @@ class PreferencesManager {
      * @param array $order
      * @return void
      */
-    public function loadDirectory($directory, array $order = []) {
+    public function loadDirectory(string $directory, array $order = []) {
         if(!empty($order)) {
             $this->loadOrderedDirectory($directory, $order);
         } else {
@@ -125,14 +130,14 @@ class PreferencesManager {
      *
      * @param string $key
      * @return Schema
-     * @throws InvalidArgumentException If the key can't be found.
+     * @throws PreferenceNotFoundException If the key can't be found.
      */
     public function getSchema($key) {
         $this->loadSchema($key);
 
         $schema = Arr::get($this->schemas, $key, null);
         if($schema == null) {
-            throw new InvalidArgumentException('Schema "' . $key . '" not found.');
+            throw new PreferenceNotFoundException('Schema "' . $key . '" not found.');
         }
         return $schema;
     }
@@ -246,12 +251,20 @@ class PreferencesManager {
     public function get($key, $default = null) {
         $parts = explode('::', $key);
         try {
-            return $this->getSchema($parts[0])->getRepository()->get($parts[1], $default);
+            $val = $this->getSchema($parts[0])->getRepository()->get($parts[1], $default);
+            if($val === null) {
+                throw new PreferenceNotFoundException($key . ' has `null` value');
+            }
+            return $val;
         } catch(PreferenceNotFoundException $e) {
-            if($default !== null) {
-                return $default;
-            } else {
-                throw $e;
+            try {
+                return $this->fallback->getPreferenceValue($key);
+            } catch (PreferenceNotFoundException $e) {
+                if($default !== null) {
+                    return $default;
+                } else {
+                    throw $e;
+                }
             }
         }
     }

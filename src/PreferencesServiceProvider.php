@@ -2,14 +2,13 @@
 
 namespace Oxygen\Preferences;
 
-use Oxygen\Core\Contracts\CoreConfiguration;
-use Oxygen\Core\Database\AutomaticMigrator;
 use Oxygen\Data\BaseServiceProvider;
 use Oxygen\Data\Cache\CacheSettingsRepositoryInterface;
 use Oxygen\Preferences\Cache\CacheSettingsRepository;
 use Oxygen\Preferences\Loader\Database\DoctrinePreferenceRepository;
 use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
 use Oxygen\Theme\ThemeLoader;
+use Oxygen\Theme\ThemeManager;
 
 class PreferencesServiceProvider extends BaseServiceProvider {
 
@@ -31,7 +30,7 @@ class PreferencesServiceProvider extends BaseServiceProvider {
         $this->app[PreferencesManager::class]->loadDirectory(__DIR__ . '/../resources/preferences');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'oxygen/preferences');
 
-        $this->app[AutomaticMigrator::class]->loadMigrationsFrom(__DIR__ . '/../migrations', 'oxygen/preferences');
+        $this->loadMigrationsFrom(__DIR__ . '/../migrations');
 	}
 
 	/**
@@ -47,8 +46,12 @@ class PreferencesServiceProvider extends BaseServiceProvider {
 
         $this->app->bind(PreferenceRepositoryInterface::class, DoctrinePreferenceRepository::class);
 
+        $this->app->singleton(ThemeSpecificPreferencesFallback::class, function() {
+            return new ThemeSpecificPreferencesFallback($this->app[ThemeManager::class]);
+        });
+        $this->app->bind(PreferencesFallbackInterface::class, ThemeSpecificPreferencesFallback::class);
 	    $this->app->singleton(PreferencesManager::class, function() {
-	        return new PreferencesManager();
+	        return new PreferencesManager($this->app[PreferencesFallbackInterface::class]);
 	    });
 	}
 
