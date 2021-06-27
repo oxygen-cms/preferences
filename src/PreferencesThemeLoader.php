@@ -26,7 +26,7 @@ class PreferencesThemeLoader implements ThemeLoader {
      */
     public function getCurrentTheme() {
         try {
-            return $this->container->get(PreferencesManager::class)->get('appearance.themes::theme');
+            return $this->container->get(PreferencesManager::class)->getSchema('appearance.themes')->getRepository()->get('theme');
         } catch(PreferenceNotFoundException $e) {
             throw new ThemeNotFoundException($e);
         }
