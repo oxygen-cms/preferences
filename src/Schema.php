@@ -36,18 +36,11 @@ class Schema {
     protected $loader;
 
     /**
-     * The Repository.
+     * Contains preferences values.
      *
-     * @var Repository
+     * @var PreferencesStoreInterface
      */
     protected $repository;
-
-    /**
-     * A custom view file to be displayed.
-     *
-     * @var string
-     */
-    protected $view;
 
     /**
      * Validation rules for the fields
@@ -111,7 +104,6 @@ class Schema {
      *
      * @return void
      */
-
     protected function resolveLoader() {
         if(is_callable($this->loader)) {
             $callable = $this->loader;
@@ -139,14 +131,14 @@ class Schema {
         $this->resolveLoader();
 
         if($this->repository != null) {
-            $this->loader->store($this->repository);
+            $this->loader->store();
         }
     }
 
     /**
      * Returns the Preferences repository.
      *
-     * @return Repository
+     * @return PreferencesStoreInterface
      */
     public function getRepository() {
         if($this->repository === null) {
@@ -162,25 +154,17 @@ class Schema {
      * @param FieldMetadata $field
      * @return void
      */
-    public function addField(FieldMetadata $field, $group = '', $subgroup = '') {
-        if(!isset($this->fields[$group])) {
-            $this->fields[$group] = [];
-        }
-        if(!isset($this->fields[$group][$subgroup])) {
-            $this->fields[$group][$subgroup] = [];
-        }
-        $this->fields[$group][$subgroup][$field->name] = $field;
+    public function addField(FieldMetadata $field) {
+        $this->fields[$field->name] = $field;
     }
 
     /**
-     * Add a field.
+     * Constructs a field.
      *
      * @param array $parameters
-     * @param string $group
-     * @param string $subgroup
      * @return void
      */
-    public function makeField(array $parameters, $group = '', $subgroup = '') {
+    public function makeField(array $parameters) {
         $field = new FieldMetadata($parameters['name'], 'text', true);
         unset($parameters['name']);
         foreach($parameters as $key => $value) {
@@ -193,7 +177,7 @@ class Schema {
             }
             $field->$key = $value;
         }
-        $this->addField($field, $group, $subgroup);
+        $this->addField($field);
     }
 
     /**
@@ -203,15 +187,8 @@ class Schema {
      * @return void
      */
     public function makeFields(array $fields) {
-        foreach($fields as $groupName => $groupItems) {
-            foreach($groupItems as $subgroupName => $subgroupItems) {
-                if(!is_array($subgroupItems)) {
-                    break;
-                }
-                foreach($subgroupItems as $item) {
-                    $this->makeField($item, $groupName, $subgroupName);
-                }
-            }
+        foreach($fields as $item) {
+            $this->makeField($item);
         }
     }
 
@@ -221,8 +198,8 @@ class Schema {
      * @param string $name
      * @return FieldMetadata
      */
-    public function getField($name, $group = '', $subgroup = '') {
-        return $this->fields[$group][$subgroup][$name];
+    public function getField($name) {
+        return $this->fields[$name];
     }
 
     /**
@@ -232,34 +209,6 @@ class Schema {
      */
     public function getFields() {
         return $this->fields;
-    }
-
-    /**
-     * Sets the view.
-     *
-     * @param string $view
-     * @return void
-     */
-    public function setView($view) {
-        $this->view = $view;
-    }
-
-    /**
-     * Determines if the view has been set.
-     *
-     * @return boolean
-     */
-    public function hasView() {
-        return $this->view !== null;
-    }
-
-    /**
-     * Returns the view.
-     *
-     * @return string
-     */
-    public function getView() {
-        return $this->view;
     }
 
     /**

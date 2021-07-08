@@ -2,24 +2,22 @@
 
 namespace Oxygen\Preferences\Loader;
 
-use Oxygen\Preferences\Repository;
-use Oxygen\Preferences\Schema;
+use Oxygen\Preferences\PreferencesStoreInterface;
 
 interface LoaderInterface {
 
     /**
      * Loads the preferences and returns the repository.
      *
-     * @return Repository
+     * @return PreferencesStoreInterface
      */
-    public function load();
+    public function load(): PreferencesStoreInterface;
 
     /**
      * Stores the preferences.
      *
-     * @param Repository $repository
      * @return void
      */
-    public function store(Repository $repository);
+    public function store();
 
 }

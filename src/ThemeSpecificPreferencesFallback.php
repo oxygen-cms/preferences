@@ -14,48 +14,41 @@ use Oxygen\Theme\ThemeNotFoundException;
  *
  * @package Oxygen\Preferences
  */
-class ThemeSpecificPreferencesFallback implements PreferencesFallbackInterface {
+class ThemeSpecificPreferencesFallback implements PreferencesStorageInterface {
 
     /**
      * @var ThemeManager
      */
     private $themeManager;
+
     /**
      * @var Theme
      */
     private $currentTheme = null;
 
-    public function __construct(ThemeManager $themeManager) {
+    /**
+     * @var string
+     */
+    private $key;
+
+    public function __construct(ThemeManager $themeManager, string $key) {
         $this->themeManager = $themeManager;
+        $this->key = $key;
     }
 
     /**
-     * Override the theme for the duration of the request, but do not store it for next time.
-     *
-     * @param string $override
-     * @throws ThemeNotFoundException
+     * @return array
      */
-    public function temporarilyOverrideTheme(string $override) {
-        $this->currentTheme = $this->themeManager->get($override);
-    }
-
-    /**
-     * @param string $key
-     * @return null|mixed
-     * @throws PreferenceNotFoundException
-     */
-    public function getPreferenceValue(string $key) {
+    public function getPreferences(): array {
         $currentTheme = $this->getCurrentTheme();
-        $keyParts = explode('::', $key);
-        if ($currentTheme !== null && isset($currentTheme->getProvides()[$keyParts[0]])) {
-            if(isset($currentTheme->getProvides()[$keyParts[0]][$keyParts[1]])) {
-                return $currentTheme->getProvides()[$keyParts[0]][$keyParts[1]];
-            }
+        if(isset($currentTheme->getProvides()[$this->key])) {
+            return $currentTheme->getProvides()[$this->key];
+        } else {
+            return [];
         }
-        throw new PreferenceNotFoundException('No value for key `' . $key . '` in theme ' . ($currentTheme === null ? '[no theme]' : '"' . $currentTheme->getName() . '"'));
     }
 
-    private function getCurrentTheme() {
+    private function getCurrentTheme(): Theme {
         if($this->currentTheme === null) {
             try {
                 $this->currentTheme = $this->themeManager->current();
@@ -65,5 +58,4 @@ class ThemeSpecificPreferencesFallback implements PreferencesFallbackInterface {
         }
         return $this->currentTheme;
     }
-
 }

@@ -5,6 +5,7 @@ namespace Oxygen\Preferences\Loader\Database;
 use Doctrine\ORM\NoResultException as DoctrineNoResultException;
 use Oxygen\Data\Exception\NoResultException;
 use Oxygen\Data\Repository\Doctrine\Repository;
+use Oxygen\Preferences\Loader\PreferenceRepositoryInterface;
 
 class DoctrinePreferenceRepository extends Repository implements PreferenceRepositoryInterface {
 

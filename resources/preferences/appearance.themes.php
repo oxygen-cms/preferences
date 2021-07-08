@@ -1,34 +1,30 @@
 <?php
 
-use Oxygen\Preferences\Loader\Database\PreferenceRepositoryInterface;
-use Oxygen\Preferences\Loader\ThemeLoader;
+use Illuminate\Validation\Rule;
+use Oxygen\Preferences\Loader\PreferenceRepositoryInterface;
 use Oxygen\Preferences\Loader\DatabaseLoader;
-use Oxygen\Preferences\PreferencesManager;
+use Oxygen\Theme\Theme;
 use Oxygen\Theme\ThemeManager;
 
 Preferences::register('appearance.themes', function($schema) {
     $schema->setTitle('Themes');
     $schema->setLoader(new DatabaseLoader(app(PreferenceRepositoryInterface::class), 'appearance.themes'));
 
-//    new ThemeLoader(
-//
-//        app(PreferencesManager::class),
-//        app(ThemeManager::class),
-//        'theme',
-//        'theme'
-//    ));
+    $themes = app(ThemeManager::class)->all();
 
     $schema->makeField([
         'name' => 'theme',
         'label' => 'Theme',
         'type' => 'select',
-        'options' => function() {
-            $themes = app(ThemeManager::class)->all();
-            $return = [];
-            foreach($themes as $key => $theme) {
-                $return[$key] = $theme->getName();
-            }
-            return $return;
-        }
+        'options' => function() use($themes) {
+            return array_map(function(Theme $theme) {
+                return $theme->toArray();
+            }, $themes);
+        },
+        'validationRules' => [
+            Rule::in(array_map(function(Theme $theme) {
+                return $theme->getKey();
+            }, $themes))
+        ]
     ]);
 });

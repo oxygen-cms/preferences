@@ -4,10 +4,10 @@
 namespace Oxygen\Preferences;
 
 use Illuminate\Contracts\Container\Container;
-use Oxygen\Theme\ThemeLoader;
+use Oxygen\Theme\CurrentThemeLoader;
 use Oxygen\Theme\ThemeNotFoundException;
 
-class PreferencesThemeLoader implements ThemeLoader {
+class PreferencesCurrentThemeLoader implements CurrentThemeLoader {
 
     /**
      * @var Container
@@ -24,7 +24,7 @@ class PreferencesThemeLoader implements ThemeLoader {
      * @return string
      * @throws ThemeNotFoundException
      */
-    public function getCurrentTheme() {
+    public function getCurrentTheme(): string {
         try {
             return $this->container->get(PreferencesManager::class)->getSchema('appearance.themes')->getRepository()->get('theme');
         } catch(PreferenceNotFoundException $e) {
@@ -37,7 +37,7 @@ class PreferencesThemeLoader implements ThemeLoader {
      *
      * @param string $theme the name of the new theme
      */
-    public function setCurrentTheme($theme) {
+    public function setCurrentTheme(string $theme) {
         $schema = $this->container->get(PreferencesManager::class)->getSchema('appearance.themes');
         $schema->getRepository()->set('theme', $theme);
         $schema->storeRepository();

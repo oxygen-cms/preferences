@@ -13,7 +13,6 @@ class PreferencesManager {
      *
      * @var array
      */
-
     protected $schemas;
 
     /**
@@ -21,7 +20,6 @@ class PreferencesManager {
      *
      * @var array
      */
-
     protected $lazySchemas;
 
     /**
@@ -38,21 +36,15 @@ class PreferencesManager {
      * @var array
      */
     protected $resolvingCallbacks = [];
-    /**
-     * @var PreferencesFallbackInterface
-     */
-    private $fallback;
 
     /**
      * Constructs the PreferencesManager.
-     * @param PreferencesFallbackInterface $fallback
      */
-    public function __construct(PreferencesFallbackInterface $fallback) {
+    public function __construct() {
         $this->schemas = [];
         $this->lazySchemas = [];
         $this->groups  = [];
         $this->resolvingCallbacks = [];
-        $this->fallback = $fallback;
     }
 
     /**
@@ -82,7 +74,6 @@ class PreferencesManager {
      * @param array $order
      * @return void
      */
-
     protected function loadOrderedDirectory($directory, array $order) {
         foreach($order as $item) {
             require $directory . '/' . $item . '.php';
@@ -248,7 +239,7 @@ class PreferencesManager {
      * @return mixed
      * @throws PreferenceNotFoundException
      */
-    public function get($key, $default = null) {
+    public function get(string $key, $default = null) {
         $parts = explode('::', $key);
         try {
             $val = $this->getSchema($parts[0])->getRepository()->get($parts[1], $default);
@@ -257,14 +248,10 @@ class PreferencesManager {
             }
             return $val;
         } catch(PreferenceNotFoundException $e) {
-            try {
-                return $this->fallback->getPreferenceValue($key);
-            } catch (PreferenceNotFoundException $e) {
-                if($default !== null) {
-                    return $default;
-                } else {
-                    throw $e;
-                }
+            if($default !== null) {
+                return $default;
+            } else {
+                throw $e;
             }
         }
     }
