@@ -22,6 +22,8 @@ class PreferencesController extends Controller {
      * Constructs the AuthController.
      *
      * @param PreferencesManager $preferences
+     * @param Permissions $permissions
+     * @param Factory $validationFactory
      */
     public function __construct(PreferencesManager $preferences, Permissions $permissions, Factory $validationFactory) {
         $this->preferences = $preferences;
@@ -169,7 +171,6 @@ class PreferencesController extends Controller {
         try {
             $value = $this->preferences->get($key);
         } catch(PreferenceNotFoundException $e) {
-
         }
         return $value;
     }
