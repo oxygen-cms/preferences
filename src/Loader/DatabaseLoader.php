@@ -2,6 +2,7 @@
 
 namespace Oxygen\Preferences\Loader;
 
+use Oxygen\Data\Exception\InvalidEntityException;
 use Oxygen\Preferences\ChainedStore;
 use Oxygen\Data\Exception\NoResultException;
 use Oxygen\Preferences\Loader\Database\PreferenceItem;
@@ -82,6 +83,7 @@ class DatabaseLoader implements LoaderInterface {
      * Stores the preferences.
      *
      * @return void
+     * @throws InvalidEntityException if the preferences were invalid
      */
     public function store() {
         if($this->cachedRepository !== null) {

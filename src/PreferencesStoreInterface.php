@@ -7,7 +7,7 @@ namespace Oxygen\Preferences;
 interface PreferencesStoreInterface {
 
     /**
-     * Get the specified preferences item. Throws if not found.
+     * Get the specified preferences value. Throws if not found.
      *
      * @param string $key key using dot notation
      * @return mixed
@@ -15,7 +15,7 @@ interface PreferencesStoreInterface {
     public function get(string $key);
 
     /**
-     * Get the specified preferences item.
+     * Gets the specified preferences value, or returns $default if not found.
      *
      * @param string $key
      * @param $default

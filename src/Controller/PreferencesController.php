@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
 use Oxygen\Auth\Permissions\Permissions;
 use Oxygen\Core\Controller\Controller;
+use Oxygen\Preferences\FallbackStoreInterface;
 use Oxygen\Preferences\PreferenceNotFoundException;
 use Oxygen\Preferences\PreferencesManager;
 use Oxygen\Core\Http\Notification;
@@ -48,15 +49,31 @@ class PreferencesController extends Controller {
             ->getSchema($this->getPreferencesGroup($key));
 
         $field = $schema->getField($this->getPreferencesField($key));
-        $options = [];
-        foreach($field->getOptions() as $value => $display) {
-            $options[] = ['value' => $value, 'display' => $display ];
+
+        return response()->json(
+            array_merge([
+                'options' => $field->getOptions(),
+                'status' => Notification::SUCCESS
+            ], $this->getValues($schema, $key))
+        );
+    }
+
+    private function getValues(Schema $schema, string $key) {
+        $field = $this->getPreferencesField($key);
+        $repository = $schema->getRepository();
+        $value = $repository->getOrDefault($field, null);
+        $fallbackValue = null;
+        $primaryValue = $value;
+        if($repository instanceof FallbackStoreInterface) {
+            $fallbackValue = $repository->getFallback($field);
+            $primaryValue = $repository->getPrimary($field);
         }
-        return response()->json([
-            'value' => $this->getOrNull($key),
-            'options' => $options,
-            'status' => Notification::SUCCESS
-        ]);
+
+        return [
+            'primaryValue' => $primaryValue,
+            'value' => $value,
+            'fallbackValue' => $fallbackValue
+        ];
     }
 
     /**
@@ -105,9 +122,12 @@ class PreferencesController extends Controller {
             ->getSchema($this->getPreferencesGroup($key));
 
         $value = $request->input('value');
-        $errorResponse = $this->checkIsValueValid($schema, $key, $value);
-        if($errorResponse !== null) {
-            return $errorResponse;
+
+        if(!$this->hasFallback($schema, $key) || $value !== null) {
+            $errorResponse = $this->checkIsValueValid($schema, $key, $value);
+            if($errorResponse !== null) {
+                return $errorResponse;
+            }
         }
 
         $schema
@@ -115,11 +135,22 @@ class PreferencesController extends Controller {
             ->set($this->getPreferencesField($key), $value);
         $schema->storeRepository();
 
-        return response()->json([
-            'content' => 'Preference updated',
-            'value' => $this->getOrNull($key),
-            'status' => Notification::SUCCESS
-        ]);
+        return response()->json(
+            array_merge([
+                'content' => 'Preference updated',
+                'status' => Notification::SUCCESS
+            ], $this->getValues($schema, $key))
+        );
+    }
+
+    /**
+     * @param Schema $schema
+     * @param string $key
+     * @return bool true if there is a fallback for this value
+     */
+    private function hasFallback(Schema $schema, string $key) {
+        $repository = $schema->getRepository();
+        return $repository instanceof FallbackStoreInterface && $repository->getFallback($this->getPreferencesField($key)) !== null;
     }
 
     /**
@@ -164,15 +195,6 @@ class PreferencesController extends Controller {
             ]);
         }
         return null;
-    }
-
-    private function getOrNull(string $key) {
-        $value = null;
-        try {
-            $value = $this->preferences->get($key);
-        } catch(PreferenceNotFoundException $e) {
-        }
-        return $value;
     }
 
     private function getPreferencesGroup(string $key) {

@@ -7,7 +7,7 @@ use Closure;
 use Generator;
 use Illuminate\Support\Arr;
 
-class ChainedStore implements PreferencesStoreInterface {
+class ChainedStore implements PreferencesStoreInterface, FallbackStoreInterface {
 
     /**
      * A function which returns an iterator over preferences.
@@ -16,13 +16,6 @@ class ChainedStore implements PreferencesStoreInterface {
      * @var Closure
      */
     protected $preferencesGenerator;
-
-    /**
-     * Preferences that have changed.
-     *
-     * @var array
-     */
-    protected $changed;
 
     /**
      * @var array
@@ -37,7 +30,6 @@ class ChainedStore implements PreferencesStoreInterface {
     public function __construct(Closure $preferencesGenerator) {
         $this->preferencesGenerator = $preferencesGenerator;
         $this->preferencesOverlay = [];
-        $this->changed = [];
     }
 
     /**
@@ -63,6 +55,45 @@ class ChainedStore implements PreferencesStoreInterface {
     }
 
     /**
+     * Gets the value for the given key, in any is given.
+     *
+     * @param string $key key using dot notation
+     * @return mixed|null the fallback value, or null if not found
+     */
+    public function getFallback(string $key) {
+        $generator = $this->getGenerator();
+        $skip = true;
+        foreach($generator as $preferences) {
+            if($skip) {
+                $skip = false;
+                continue;
+            }
+            $value = Arr::get($preferences, $key);
+            if($value !== null) {
+                return $value;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Gets the value for the given key, in any is given. Otherwise throws.
+     *
+     * @param string $key key using dot notation
+     * @return mixed|null the fallback value, or null if not found
+     */
+    function getPrimary(string $key) {
+        $cached = Arr::get($this->preferencesOverlay, $key);
+        if($cached !== null) {
+            return $cached;
+        }
+        $generator = $this->getGenerator();
+        $primaryPreferences = $generator->current();
+        return Arr::get($primaryPreferences, $key);
+    }
+
+    /**
      * Sets the specified preferences item.
      * Will not persist changes automatically.
      *
@@ -71,10 +102,7 @@ class ChainedStore implements PreferencesStoreInterface {
      * @return void
      */
     public function set(string $key, $value) {
-        $old = $this->getOrDefault($key, null);
-        if($old !== $value) {
-            Arr::set($this->preferencesOverlay, $key, $value);
-        }
+        Arr::set($this->preferencesOverlay, $key, $value);
     }
 
     /**
