@@ -17,19 +17,17 @@ class ChainedStore implements PreferencesStoreInterface, FallbackStoreInterface 
      */
     protected $preferencesGenerator;
 
-    /**
-     * @var array
-     */
-    private $preferencesOverlay;
+    protected PreferencesSettingInterface $setter;
 
     /**
      * Constructs a Chained preferences store
      *
      * @param Closure $preferencesGenerator
+     * @param PreferencesSettingInterface $setter
      */
-    public function __construct(Closure $preferencesGenerator) {
+    public function __construct(Closure $preferencesGenerator, PreferencesSettingInterface $setter) {
         $this->preferencesGenerator = $preferencesGenerator;
-        $this->preferencesOverlay = [];
+        $this->setter = $setter;
     }
 
     /**
@@ -40,10 +38,6 @@ class ChainedStore implements PreferencesStoreInterface, FallbackStoreInterface 
      * @throws PreferenceNotFoundException
      */
     public function get(string $key) {
-        $cached = Arr::get($this->preferencesOverlay, $key);
-        if($cached !== null) {
-            return $cached;
-        }
         $generator = $this->getGenerator();
         foreach($generator as $preferences) {
             $value = Arr::get($preferences, $key);
@@ -84,10 +78,6 @@ class ChainedStore implements PreferencesStoreInterface, FallbackStoreInterface 
      * @return mixed|null the fallback value, or null if not found
      */
     function getPrimary(string $key) {
-        $cached = Arr::get($this->preferencesOverlay, $key);
-        if($cached !== null) {
-            return $cached;
-        }
         $generator = $this->getGenerator();
         $primaryPreferences = $generator->current();
         return Arr::get($primaryPreferences, $key);
@@ -102,7 +92,7 @@ class ChainedStore implements PreferencesStoreInterface, FallbackStoreInterface 
      * @return void
      */
     public function set(string $key, $value) {
-        Arr::set($this->preferencesOverlay, $key, $value);
+        $this->setter->set($key, $value);
     }
 
     /**
@@ -121,17 +111,6 @@ class ChainedStore implements PreferencesStoreInterface, FallbackStoreInterface 
     }
 
     /**
-     * Determines if the specified preferences item has changed since last being persisted.
-     * In other words, if the key needs to be persisted again.
-     *
-     * @param string $key key using dot notation
-     * @return boolean
-     */
-    public function hasChanged(string $key): bool {
-        return Arr::has($this->preferencesOverlay, $key);
-    }
-
-    /**
      * Get the specified preferences item.
      *
      * @param string $key
@@ -144,10 +123,6 @@ class ChainedStore implements PreferencesStoreInterface, FallbackStoreInterface 
         } catch(PreferenceNotFoundException $e) {
             return $default;
         }
-    }
-
-    public function getChangedArray(): array {
-        return $this->preferencesOverlay;
     }
 
     public function getGenerator(): Generator {

@@ -2,15 +2,17 @@
 
 namespace Oxygen\Preferences\Loader;
 
+use Illuminate\Support\Arr;
 use Oxygen\Data\Exception\InvalidEntityException;
 use Oxygen\Preferences\ChainedStore;
 use Oxygen\Data\Exception\NoResultException;
 use Oxygen\Preferences\Loader\Database\PreferenceItem;
 use Oxygen\Preferences\PreferenceNotFoundException;
+use Oxygen\Preferences\PreferencesSettingInterface;
 use Oxygen\Preferences\PreferencesStorageInterface;
 use Oxygen\Preferences\PreferencesStoreInterface;
 
-class DatabaseLoader implements LoaderInterface {
+class DatabaseLoader implements LoaderInterface, PreferencesSettingInterface {
 
     /**
      * Config repository to use.
@@ -70,7 +72,7 @@ class DatabaseLoader implements LoaderInterface {
                             yield $this->fallback->getPreferences();
                         }
                     };
-                $this->cachedRepository = new ChainedStore($chain);
+                $this->cachedRepository = new ChainedStore($chain, $this);
             } catch(NoResultException $e) {
                 throw new PreferenceNotFoundException('Preference Key ' . $this->key . ' Not Found In Database', 0, $e);
             }
@@ -87,14 +89,20 @@ class DatabaseLoader implements LoaderInterface {
      */
     public function store() {
         if($this->cachedRepository !== null) {
-            $this->preferenceItem->setPreferences(
-                array_merge_recursive_distinct(
-                    $this->preferenceItem->getPreferences(),
-                    $this->cachedRepository->getChangedArray()
-                )
-            );
             $this->repository->persist($this->preferenceItem);
         }
     }
 
+    /**
+     * Sets the preferences value.
+     *
+     * @param string $key
+     * @param $value
+     * @return void
+     */
+    public function set(string $key, $value) {
+        $prefs = $this->preferenceItem->getPreferences();
+        Arr::set($prefs, $key, $value);
+        $this->preferenceItem->setPreferences($prefs);
+    }
 }
