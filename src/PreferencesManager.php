@@ -53,11 +53,15 @@ class PreferencesManager {
      * @param string $directory
      * @param array $order
      * @return void
+     * @throws \Exception
      */
     public function loadDirectory(string $directory, array $order = []) {
         if(!empty($order)) {
             $this->loadOrderedDirectory($directory, $order);
         } else {
+            if(!is_dir($directory)) {
+                throw new \Exception('invalid preferences directory ' . $directory);
+            }
             $iterator = new DirectoryIterator($directory);
             foreach($iterator as $file) {
                 if($file->isFile() && Str::endsWith($file->getFilename(), '.php')) {
@@ -87,18 +91,8 @@ class PreferencesManager {
      * @param callable $callback
      * @return void
      */
-    public function register($key, callable $callback) {
-        $this->addLazy($key, $callback);
-    }
-
-    /**
-     * Adds a lazy loaded preferences schema.
-     *
-     * @param string $key
-     * @param callable $callback
-     */
-
-    protected function addLazy($key, callable $callback) {
+    public function register(string $key, callable $callback) {
+        event(new SchemaRegistered($key));
         $this->lazySchemas[$key] = $callback;
     }
 
@@ -173,7 +167,7 @@ class PreferencesManager {
      *
      * @param Schema $schema
      */
-    public function addSchema(Schema $schema) {
+    protected function addSchema(Schema $schema) {
         Arr::set($this->schemas, $schema->getKey(), $schema);
     }
 
@@ -183,7 +177,7 @@ class PreferencesManager {
      * @param string $key
      * @return boolean
      */
-    public function hasSchema($key) {
+    public function hasSchema(string $key) {
         $this->loadSchema($key);
 
         return Arr::get($this->schemas, $key, null) !== null;
@@ -194,7 +188,7 @@ class PreferencesManager {
      *
      * @return array
      */
-    public function all() {
+    public function all(): array {
         $this->loadSchema('');
 
         return $this->schemas;
