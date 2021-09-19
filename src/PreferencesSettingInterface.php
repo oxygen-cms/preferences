@@ -10,7 +10,7 @@ interface PreferencesSettingInterface {
      * Sets the preferences value.
      *
      * @param string $key
-     * @param $value
+     * @param mixed $value
      * @return void
      */
     public function set(string $key, $value);

@@ -48,6 +48,13 @@ class ThemeSpecificPreferencesFallback implements PreferencesStorageInterface {
         }
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function setPreferences(array $preferences) {
+        throw new \Exception('ThemeSpecificPreferencesFallback is readonly');
+    }
+
     private function getCurrentTheme(): Theme {
         if($this->currentTheme === null) {
             try {

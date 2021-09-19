@@ -114,7 +114,7 @@ class ChainedStore implements PreferencesStoreInterface, FallbackStoreInterface 
      * Get the specified preferences item.
      *
      * @param string $key
-     * @param $default
+     * @param mixed $default
      * @return mixed
      */
     public function getOrDefault(string $key, $default) {

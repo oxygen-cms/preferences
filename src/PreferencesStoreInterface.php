@@ -18,7 +18,7 @@ interface PreferencesStoreInterface {
      * Gets the specified preferences value, or returns $default if not found.
      *
      * @param string $key
-     * @param $default
+     * @param mixed $default
      * @return mixed
      */
     public function getOrDefault(string $key, $default);

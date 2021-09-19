@@ -5,8 +5,8 @@ namespace Oxygen\Preferences\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
-use Oxygen\Auth\Permissions\Permissions;
 use Oxygen\Core\Controller\Controller;
+use Oxygen\Core\Permissions\PermissionsInterface;
 use Oxygen\Preferences\FallbackStoreInterface;
 use Oxygen\Preferences\PreferenceNotFoundException;
 use Oxygen\Preferences\PreferencesManager;
@@ -16,17 +16,17 @@ use Oxygen\Preferences\Schema;
 class PreferencesController extends Controller {
 
     private PreferencesManager $preferences;
-    private Permissions $permissions;
+    private PermissionsInterface $permissions;
     private Factory $validationFactory;
 
     /**
      * Constructs the AuthController.
      *
      * @param PreferencesManager $preferences
-     * @param Permissions $permissions
+     * @param PermissionsInterface $permissions
      * @param Factory $validationFactory
      */
-    public function __construct(PreferencesManager $preferences, Permissions $permissions, Factory $validationFactory) {
+    public function __construct(PreferencesManager $preferences, PermissionsInterface $permissions, Factory $validationFactory) {
         $this->preferences = $preferences;
         $this->permissions = $permissions;
         $this->validationFactory = $validationFactory;
@@ -176,7 +176,7 @@ class PreferencesController extends Controller {
     /**
      * @param Schema $schema
      * @param string $key
-     * @param $value
+     * @param mixed $value
      * @return JsonResponse|null
      */
     private function checkIsValueValid(Schema $schema, string $key, $value): ?JsonResponse {

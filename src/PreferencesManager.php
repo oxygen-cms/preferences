@@ -236,7 +236,7 @@ class PreferencesManager {
     public function get(string $key, $default = null) {
         $parts = explode('::', $key);
         try {
-            $val = $this->getSchema($parts[0])->getRepository()->get($parts[1], $default);
+            $val = $this->getSchema($parts[0])->getRepository()->getOrDefault($parts[1], $default);
             if($val === null) {
                 throw new PreferenceNotFoundException($key . ' has `null` value');
             }

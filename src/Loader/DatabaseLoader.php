@@ -34,7 +34,7 @@ class DatabaseLoader implements LoaderInterface, PreferencesSettingInterface {
     private $cachedRepository;
 
     /**
-     * @var PreferenceItem
+     * @var PreferencesStorageInterface
      */
     private $preferenceItem;
 
@@ -97,7 +97,7 @@ class DatabaseLoader implements LoaderInterface, PreferencesSettingInterface {
      * Sets the preferences value.
      *
      * @param string $key
-     * @param $value
+     * @param mixed $value
      * @return void
      */
     public function set(string $key, $value) {
