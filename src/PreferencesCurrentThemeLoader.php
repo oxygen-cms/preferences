@@ -4,8 +4,8 @@
 namespace Oxygen\Preferences;
 
 use Illuminate\Contracts\Container\Container;
-use Oxygen\Theme\CurrentThemeLoader;
-use Oxygen\Theme\ThemeNotFoundException;
+use Oxygen\Core\Theme\CurrentThemeLoader;
+use Oxygen\Core\Theme\ThemeNotFoundException;
 
 class PreferencesCurrentThemeLoader implements CurrentThemeLoader {
 
