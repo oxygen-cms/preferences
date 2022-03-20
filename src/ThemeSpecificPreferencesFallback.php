@@ -5,9 +5,9 @@ namespace Oxygen\Preferences;
 
 
 use Illuminate\Support\Arr;
-use Oxygen\Theme\Theme;
-use Oxygen\Theme\ThemeManager;
-use Oxygen\Theme\ThemeNotFoundException;
+use Oxygen\Core\Theme\Theme;
+use Oxygen\Core\Theme\ThemeManager;
+use Oxygen\Core\Theme\ThemeNotFoundException;
 
 /**
  * Allow the use of theme-wide preferences as a fallback, when the required preference item is not set.

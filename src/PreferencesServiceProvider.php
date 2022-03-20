@@ -5,7 +5,7 @@ namespace Oxygen\Preferences;
 use Oxygen\Data\BaseServiceProvider;
 use Oxygen\Preferences\Loader\Database\DoctrinePreferenceRepository;
 use Oxygen\Preferences\Loader\PreferenceRepositoryInterface;
-use Oxygen\Theme\CurrentThemeLoader;
+use Oxygen\Core\Theme\CurrentThemeLoader;
 
 class PreferencesServiceProvider extends BaseServiceProvider {
 
