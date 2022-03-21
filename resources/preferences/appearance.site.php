@@ -3,7 +3,7 @@
 use Oxygen\Preferences\Loader\PreferenceRepositoryInterface;
 use Oxygen\Preferences\Loader\DatabaseLoader;
 use Oxygen\Preferences\ThemeSpecificPreferencesFallback;
-use Oxygen\Theme\ThemeManager;
+use Oxygen\Core\Theme\ThemeManager;
 
 Preferences::register('appearance.site', function ($schema) {
     $schema->setTitle('Themes');

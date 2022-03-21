@@ -3,8 +3,8 @@
 use Illuminate\Validation\Rule;
 use Oxygen\Preferences\Loader\PreferenceRepositoryInterface;
 use Oxygen\Preferences\Loader\DatabaseLoader;
-use Oxygen\Theme\Theme;
-use Oxygen\Theme\ThemeManager;
+use Oxygen\Core\Theme\Theme;
+use Oxygen\Core\Theme\ThemeManager;
 
 Preferences::register('appearance.themes', function($schema) {
     $schema->setTitle('Themes');
