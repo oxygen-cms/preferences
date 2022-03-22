@@ -19,12 +19,12 @@ class ThemeSpecificPreferencesFallback implements PreferencesStorageInterface {
     /**
      * @var ThemeManager
      */
-    private $themeManager;
+    private ThemeManager $themeManager;
 
     /**
-     * @var Theme
+     * @var Theme|null
      */
-    private $currentTheme = null;
+    private ?Theme $currentTheme = null;
 
     /**
      * @var string
@@ -41,11 +41,8 @@ class ThemeSpecificPreferencesFallback implements PreferencesStorageInterface {
      */
     public function getPreferences(): array {
         $currentTheme = $this->getCurrentTheme();
-        if(isset($currentTheme->getProvides()[$this->key])) {
-            return $currentTheme->getProvides()[$this->key];
-        } else {
-            return [];
-        }
+        if($currentTheme === null || !isset($currentTheme->getProvides()[$this->key])) { return []; }
+        return $currentTheme->getProvides()[$this->key];
     }
 
     /**
@@ -55,7 +52,7 @@ class ThemeSpecificPreferencesFallback implements PreferencesStorageInterface {
         throw new \Exception('ThemeSpecificPreferencesFallback is readonly');
     }
 
-    private function getCurrentTheme(): Theme {
+    private function getCurrentTheme(): ?Theme {
         if($this->currentTheme === null) {
             try {
                 $this->currentTheme = $this->themeManager->current();
