@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Oxygen\Preferences\Loader\PreferenceRepositoryInterface;
-use Oxygen\Preferences\Repository;
 
 class CreateCacheSettings extends Migration {
 
@@ -14,8 +13,7 @@ class CreateCacheSettings extends Migration {
 
         $item = $preferences->make();
         $item->setKey('cacheSettings');
-        $data = new Repository(['entities' => []]);
-        $item->setPreferences($data);
+        $item->setPreferences(['entities' => []]);
         $preferences->persist($item);
     }
 

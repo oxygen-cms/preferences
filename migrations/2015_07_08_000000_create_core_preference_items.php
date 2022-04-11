@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Oxygen\Preferences\Loader\PreferenceRepositoryInterface;
-use Oxygen\Preferences\Repository;
 
 class CreateCorePreferenceItems extends Migration {
 
@@ -13,24 +12,15 @@ class CreateCorePreferenceItems extends Migration {
         $preferences = App::make(PreferenceRepositoryInterface::class);
 
         $item = $preferences->make();
-        $item->setKey('appearance.admin');
-        $data = new Repository([]);
-        //$data->set('adminLayout', 'yourLayoutHere');
-        $item->setPreferences($data);
-        $preferences->persist($item, false);
-
-        $item = $preferences->make();
         $item->setKey('appearance.themes');
-        $data = new Repository([]);
-        //$data->set('theme', 'aTheme');
-        $item->setPreferences($data);
+        $item->setPreferences([]);
         $preferences->persist($item, false);
 
         $item = $preferences->make();
         $item->setKey('system.admin');
-        $data = new Repository([]);
-        $data->set('adminUriPrefix', 'oxygen');
-        $item->setPreferences($data);
+        $item->setPreferences([
+            'adminUriPrefix' => 'oxygen'
+        ]);
         $preferences->persist($item, false);
 
         $preferences->flush();
@@ -42,7 +32,6 @@ class CreateCorePreferenceItems extends Migration {
     public function down() {
         $preferences = App::make(PreferenceRepositoryInterface::class);
 
-        $preferences->delete($preferences->findByKey('appearance.admin'), false);
         $preferences->delete($preferences->findByKey('appearance.themes'), false);
         $preferences->delete($preferences->findByKey('system.admin'), false);
 
