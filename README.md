@@ -1,5 +1,2 @@
-# Oxygen - Preferences
+**Deprecated** - functionality now included in [oxygen-cms/core](https://github.com/oxygen-cms/core)
 
-This repository contains the preferences framework.
-
-For more information visit the [Core](https://github.com/oxygen-cms/core) repository.
